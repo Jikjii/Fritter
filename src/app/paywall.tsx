@@ -7,19 +7,36 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { Badge, Button, Card, Screen } from '@/components/ui';
 import { Radius, Spacing } from '@/constants/theme';
-import { PAYWALL } from '@/content/paywall';
-import { SOCIAL_PROOF } from '@/content/social-proof';
+import { PAYWALL, PAYWALL_ZERO_MATCH } from '@/content/paywall';
+import { SOCIAL_FACTS, SOCIAL_PROOF } from '@/content/social-proof';
 import { formatMoney } from '@/domain/estimate';
 import { useCatalog } from '@/hooks/use-catalog';
 import { useTheme } from '@/hooks/use-theme';
 import { analytics, Events } from '@/services/analytics';
-import { DEFAULT_PLANS, perWeek, purchases, yearlySavingsPercent, type Plan, type PlanId } from '@/services/purchases';
+import {
+  DEFAULT_PLANS,
+  perWeek,
+  purchases,
+  yearlySavingsPercent,
+  type Plan,
+  type PlanId,
+} from '@/services/purchases';
 import { useAppStore } from '@/store/use-app-store';
 
 const TERMS_URL = 'https://example.com/terms';
 const PRIVACY_URL = 'https://example.com/privacy';
 
-function PlanOption({ plan, selected, savings, onPress }: { plan: Plan; selected: boolean; savings: number; onPress: () => void }) {
+function PlanOption({
+  plan,
+  selected,
+  savings,
+  onPress,
+}: {
+  plan: Plan;
+  selected: boolean;
+  savings: number;
+  onPress: () => void;
+}) {
   const theme = useTheme();
   const yearly = plan.id === 'yearly';
   return (
@@ -27,19 +44,42 @@ function PlanOption({ plan, selected, savings, onPress }: { plan: Plan; selected
       accessibilityRole="radio"
       accessibilityState={{ selected }}
       onPress={onPress}
-      style={[styles.plan, { borderColor: selected ? theme.primary : theme.border, backgroundColor: selected ? theme.primarySoft : theme.backgroundElement }]}>
+      style={[
+        styles.plan,
+        {
+          borderColor: selected ? theme.primary : theme.border,
+          backgroundColor: selected ? theme.primarySoft : theme.backgroundElement,
+        },
+      ]}>
       <View style={styles.planLeft}>
         <View style={styles.planTitleRow}>
           <ThemedText type="defaultBold">{yearly ? 'Yearly' : 'Weekly'}</ThemedText>
-          {yearly && savings > 0 ? <Badge label={`SAVE ${savings}%`} color="money" soft={false} /> : null}
-          {yearly && plan.trialDays > 0 ? <Badge label={`${plan.trialDays}-day free trial`} color="gold" /> : null}
+          {yearly && savings > 0 ? (
+            <Badge label={`SAVE ${savings}%`} color="money" soft={false} />
+          ) : null}
+          {yearly && plan.trialDays > 0 ? (
+            <Badge label={`${plan.trialDays}-day free trial`} color="gold" />
+          ) : null}
         </View>
         <ThemedText type="caption" themeColor="textSecondary">
-          {yearly ? `${plan.priceString}/year · ${plan.currencyCode === 'USD' ? '$' : ''}${perWeek(plan).toFixed(2)}/week` : `${plan.priceString}/week · billed weekly`}
+          {yearly
+            ? `${plan.priceString}/year · ${plan.currencyCode === 'USD' ? '$' : ''}${perWeek(plan).toFixed(2)}/week`
+            : `${plan.priceString}/week · billed weekly`}
         </ThemedText>
       </View>
-      <View style={[styles.radio, { borderColor: selected ? theme.primary : theme.border, backgroundColor: selected ? theme.primary : 'transparent' }]}>
-        {selected ? <ThemedText type="caption" style={{ color: theme.textInverse }}>✓</ThemedText> : null}
+      <View
+        style={[
+          styles.radio,
+          {
+            borderColor: selected ? theme.primary : theme.border,
+            backgroundColor: selected ? theme.primary : 'transparent',
+          },
+        ]}>
+        {selected ? (
+          <ThemedText type="caption" style={{ color: theme.textInverse }}>
+            ✓
+          </ThemedText>
+        ) : null}
       </View>
     </Pressable>
   );
@@ -70,6 +110,7 @@ export default function PaywallScreen() {
     return () => clearTimeout(t);
   }, []);
 
+  const copy = estimate.total > 0 ? PAYWALL : PAYWALL_ZERO_MATCH;
   const yearly = plans.find((p) => p.id === 'yearly');
   const weekly = plans.find((p) => p.id === 'weekly');
   const selected = plans.find((p) => p.id === planId) ?? plans[0];
@@ -106,7 +147,10 @@ export default function PaywallScreen() {
       analytics.track(Events.purchaseRestored);
       finish();
     } else {
-      Alert.alert('Nothing to restore', res.error ?? 'No active subscription found for this store account.');
+      Alert.alert(
+        'Nothing to restore',
+        res.error ?? 'No active subscription found for this store account.'
+      );
     }
   };
 
@@ -129,8 +173,8 @@ export default function PaywallScreen() {
           <Button title={ctaTitle} loading={busy === 'buy'} disabled={isPro} onPress={buy} />
           <ThemedText type="caption" themeColor="textSecondary" style={styles.center}>
             {selected?.id === 'yearly' && selected.trialDays > 0
-              ? `Free for ${selected.trialDays} days, then ${selected.priceString}/year. Cancel anytime.`
-              : `${selected?.priceString ?? ''}/${selected?.id === 'yearly' ? 'year' : 'week'}, auto-renews. Cancel anytime.`}
+              ? `Free for ${selected.trialDays} days, then ${selected.priceString}/year, auto-renews until cancelled. Cancel anytime in your store settings.`
+              : `${selected?.priceString ?? ''}/${selected?.id === 'yearly' ? 'year' : 'week'}, auto-renews until cancelled. Cancel anytime in your store settings.`}
           </ThemedText>
           <View style={styles.links}>
             <Pressable onPress={restore} disabled={busy !== null}>
@@ -140,7 +184,7 @@ export default function PaywallScreen() {
             </Pressable>
             <Pressable onPress={() => WebBrowser.openBrowserAsync(TERMS_URL)}>
               <ThemedText type="caption" themeColor="textSecondary">
-                Terms
+                Terms of Use
               </ThemedText>
             </Pressable>
             <Pressable onPress={() => WebBrowser.openBrowserAsync(PRIVACY_URL)}>
@@ -151,9 +195,14 @@ export default function PaywallScreen() {
           </View>
         </>
       }>
-      <View style={[styles.topBar, { paddingTop: Platform.OS === 'ios' ? Spacing.two : insets.top }]}>
+      <View
+        style={[styles.topBar, { paddingTop: Platform.OS === 'ios' ? Spacing.two : insets.top }]}>
         {showClose || isPro ? (
-          <Pressable onPress={dismiss} accessibilityRole="button" accessibilityLabel="Close" hitSlop={12}>
+          <Pressable
+            onPress={dismiss}
+            accessibilityRole="button"
+            accessibilityLabel="Close"
+            hitSlop={12}>
             <ThemedText type="heading" themeColor="textSecondary">
               ✕
             </ThemedText>
@@ -166,21 +215,33 @@ export default function PaywallScreen() {
       <ThemedText type="caption" themeColor="textSecondary">
         FRITTER PRO
       </ThemedText>
-      <ThemedText type="title">{PAYWALL.headline}</ThemedText>
+      <ThemedText type="title">{copy.headline}</ThemedText>
       {estimate.total > 0 ? (
         <Card tone="money">
           <ThemedText type="small">
-            Your feed currently holds about{' '}
+            Your list: up to{' '}
             <ThemedText type="smallBold" themeColor="money">
               {formatMoney(estimate.total)}
             </ThemedText>{' '}
-            in payouts you may qualify for.
+            paying now
+            {estimate.equalsPaidCount > 0
+              ? `, plus ${estimate.equalsPaidCount} refund${estimate.equalsPaidCount === 1 ? '' : 's'} of what you paid`
+              : ''}
+            {estimate.watchCount > 0 ? `, and ${estimate.watchCount} on your Watchlist` : ''}.
+          </ThemedText>
+        </Card>
+      ) : estimate.matchCount > 0 ? (
+        <Card tone="gold">
+          <ThemedText type="small">
+            You match {estimate.matchCount} program{estimate.matchCount === 1 ? '' : 's'}
+            {estimate.watchCount > 0 ? ` (${estimate.watchCount} pending on the Watchlist)` : ''}.
+            None pays cash today, so Pro is about being first when they do.
           </ThemedText>
         </Card>
       ) : null}
 
       <View style={styles.bullets}>
-        {PAYWALL.bullets.map((b) => (
+        {copy.bullets.map((b) => (
           <View key={b} style={styles.bullet}>
             <ThemedText type="default" style={{ color: theme.money }}>
               ✓
@@ -193,20 +254,47 @@ export default function PaywallScreen() {
       </View>
 
       <View style={styles.plans}>
-        {yearly ? <PlanOption plan={yearly} selected={planId === 'yearly'} savings={savings} onPress={() => { setPlanId('yearly'); analytics.track(Events.paywallPlanSelected, { plan: 'yearly' }); }} /> : null}
-        {weekly ? <PlanOption plan={weekly} selected={planId === 'weekly'} savings={0} onPress={() => { setPlanId('weekly'); analytics.track(Events.paywallPlanSelected, { plan: 'weekly' }); }} /> : null}
+        {yearly ? (
+          <PlanOption
+            plan={yearly}
+            selected={planId === 'yearly'}
+            savings={savings}
+            onPress={() => {
+              setPlanId('yearly');
+              analytics.track(Events.paywallPlanSelected, { plan: 'yearly' });
+            }}
+          />
+        ) : null}
+        {weekly ? (
+          <PlanOption
+            plan={weekly}
+            selected={planId === 'weekly'}
+            savings={0}
+            onPress={() => {
+              setPlanId('weekly');
+              analytics.track(Events.paywallPlanSelected, { plan: 'weekly' });
+            }}
+          />
+        ) : null}
       </View>
       <ThemedText type="caption" themeColor="textSecondary">
-        {PAYWALL.yearlyAnchorCopy}
+        {copy.yearlyAnchorCopy}
       </ThemedText>
 
       <Card>
-        <ThemedText type="smallBold">{PAYWALL.socialProofLine}</ThemedText>
+        <ThemedText type="smallBold">{copy.socialProofLine}</ThemedText>
         {SOCIAL_PROOF.slice(0, 2).map((p) => (
           <ThemedText key={p.name + p.quote} type="small" themeColor="textSecondary">
             {p.avatarEmoji ?? '🙂'} “{p.quote}” — {p.name}
           </ThemedText>
         ))}
+        {SOCIAL_PROOF.length === 0
+          ? SOCIAL_FACTS.slice(0, 2).map((f) => (
+              <ThemedText key={f.sourceUrl} type="small" themeColor="textSecondary">
+                {f.emoji ?? '✅'} {f.text}
+              </ThemedText>
+            ))
+          : null}
       </Card>
     </Screen>
   );
@@ -218,10 +306,25 @@ const styles = StyleSheet.create({
   bullet: { flexDirection: 'row', gap: Spacing.two, alignItems: 'flex-start' },
   bulletText: { flex: 1 },
   plans: { gap: Spacing.two },
-  plan: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Spacing.two, padding: Spacing.three, borderRadius: Radius.md, borderWidth: 2 },
+  plan: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: Spacing.two,
+    padding: Spacing.three,
+    borderRadius: Radius.md,
+    borderWidth: 2,
+  },
   planLeft: { flex: 1, gap: Spacing.one },
   planTitleRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, flexWrap: 'wrap' },
-  radio: { width: 24, height: 24, borderRadius: Radius.pill, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  radio: {
+    width: 24,
+    height: 24,
+    borderRadius: Radius.pill,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   center: { textAlign: 'center' },
   links: { flexDirection: 'row', justifyContent: 'center', gap: Spacing.four },
 });

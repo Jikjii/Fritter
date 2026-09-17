@@ -36,6 +36,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function scheduleDeadlineReminder(o: Opportunity): Promise<string | null> {
   const N = mod();
   if (!N) return null;
+  if (o.deadlineKind === 'hearing' || o.deadlineKind === 'none') return null;
   const days = daysUntil(o.deadline);
   if (days === null || days <= 0) return null;
   const fireInDays = Math.max(1, days - 3);

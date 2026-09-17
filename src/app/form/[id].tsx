@@ -25,7 +25,10 @@ export default function FormScreen() {
   const [busy, setBusy] = useState<'pdf' | 'copy' | null>(null);
 
   const text = useMemo(() => (form ? htmlToPlainText(form.html) : ''), [form]);
-  const fields = useMemo(() => (opportunity ? fieldsForOpportunity(opportunity) : []), [opportunity]);
+  const fields = useMemo(
+    () => (opportunity ? fieldsForOpportunity(opportunity) : []),
+    [opportunity]
+  );
 
   if (!form || !opportunity) {
     return (
@@ -42,7 +45,10 @@ export default function FormScreen() {
       const uri = await exportFormPdf(form);
       if (uri) {
         setFormFileUri(form.id, uri);
-        analytics.track(Events.formGenerated, { opportunityId: opportunity.id, templateId: form.templateId });
+        analytics.track(Events.formGenerated, {
+          opportunityId: opportunity.id,
+          templateId: form.templateId,
+        });
         const shared = await shareFormPdf(uri, form.title);
         if (shared) analytics.track(Events.formShared, { opportunityId: opportunity.id });
       }
@@ -62,7 +68,11 @@ export default function FormScreen() {
 
   const markSubmitted = () => {
     if (claim && updateClaimStatus(claim.id, 'submitted')) {
-      analytics.track(Events.claimStatusChanged, { from: claim.status, to: 'submitted', opportunityId: opportunity.id });
+      analytics.track(Events.claimStatusChanged, {
+        from: claim.status,
+        to: 'submitted',
+        opportunityId: opportunity.id,
+      });
       router.replace('/(tabs)/wallet');
     }
   };
@@ -73,7 +83,10 @@ export default function FormScreen() {
       : opportunity.claimMethod === 'email' && opportunity.claimEmail
         ? { label: 'Email this letter to', value: opportunity.claimEmail }
         : opportunity.claimMethod === 'online_form'
-          ? { label: 'Copy your answers into the official form', value: opportunity.claimUrl ?? opportunity.sourceUrl ?? '' }
+          ? {
+              label: 'Copy your answers into the official form',
+              value: opportunity.claimUrl ?? opportunity.sourceUrl ?? '',
+            }
           : { label: 'Send this request to', value: opportunity.company };
 
   return (
@@ -83,14 +96,25 @@ export default function FormScreen() {
         noTopInset
         footer={
           <>
-            <Button title={Platform.OS === 'web' ? 'Print / save as PDF' : 'Export PDF & share'} loading={busy === 'pdf'} onPress={exportPdf} />
+            <Button
+              title={Platform.OS === 'web' ? 'Print / save as PDF' : 'Export PDF & share'}
+              loading={busy === 'pdf'}
+              onPress={exportPdf}
+            />
             {claim && (claim.status === 'saved' || claim.status === 'in_progress') ? (
-              <Button title="I sent it — mark submitted" variant="secondary" onPress={markSubmitted} />
+              <Button
+                title="I sent it — mark submitted"
+                variant="secondary"
+                onPress={markSubmitted}
+              />
             ) : null}
           </>
         }>
         <View style={styles.rowBetween}>
-          <Badge label={form.fileUri ? 'PDF ready' : 'Draft'} color={form.fileUri ? 'money' : 'primary'} />
+          <Badge
+            label={form.fileUri ? 'PDF ready' : 'Draft'}
+            color={form.fileUri ? 'money' : 'primary'}
+          />
           {claim ? <Badge label={CLAIM_STATUS_LABEL[claim.status]} color="gold" /> : null}
         </View>
         <ThemedText type="subtitle">{form.title}</ThemedText>
@@ -104,14 +128,24 @@ export default function FormScreen() {
             {where.value}
           </ThemedText>
           {opportunity.claimMethod === 'online_form' && where.value ? (
-            <Button title="Open official form" size="md" onPress={() => WebBrowser.openBrowserAsync(where.value)} />
+            <Button
+              title="Open official form"
+              size="md"
+              onPress={() => WebBrowser.openBrowserAsync(where.value)}
+            />
           ) : null}
         </Card>
 
         <Card>
           <View style={styles.rowBetween}>
             <ThemedText type="heading">Letter</ThemedText>
-            <Button title={busy === 'copy' ? 'Copied' : 'Copy text'} variant="secondary" size="md" style={styles.smallBtn} onPress={copyText} />
+            <Button
+              title={busy === 'copy' ? 'Copied' : 'Copy text'}
+              variant="secondary"
+              size="md"
+              style={styles.smallBtn}
+              onPress={copyText}
+            />
           </View>
           <ThemedText type="small" selectable style={styles.letter}>
             {text}
@@ -132,7 +166,12 @@ export default function FormScreen() {
                 </ThemedText>
               </View>
             ))}
-          <Button title="Edit answers" variant="ghost" size="md" onPress={() => router.push({ pathname: '/claim/[id]', params: { id: opportunity.id } })} />
+          <Button
+            title="Edit answers"
+            variant="ghost"
+            size="md"
+            onPress={() => router.push({ pathname: '/claim/[id]', params: { id: opportunity.id } })}
+          />
         </Card>
 
         <Button
@@ -150,7 +189,12 @@ export default function FormScreen() {
 }
 
 const styles = StyleSheet.create({
-  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.two },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
   smallBtn: { alignSelf: 'auto' },
   letter: { lineHeight: 22 },
   fieldRow: { gap: Spacing.half, paddingVertical: Spacing.one },

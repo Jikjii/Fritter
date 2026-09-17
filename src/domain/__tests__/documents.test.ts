@@ -1,4 +1,11 @@
-import { fieldsForOpportunity, formTitle, htmlToPlainText, missingRequiredFields, prefillFromProfile, renderFormHtml } from '../documents';
+import {
+  fieldsForOpportunity,
+  formTitle,
+  htmlToPlainText,
+  missingRequiredFields,
+  prefillFromProfile,
+  renderFormHtml,
+} from '../documents';
 import type { Opportunity } from '../types';
 
 const o: Opportunity = {
@@ -11,6 +18,7 @@ const o: Opportunity = {
   eligibility: [],
   estimatedPayoutMin: 10,
   estimatedPayoutMax: 30,
+  payoutKind: 'cash',
   deadline: 'rolling',
   proofRequired: '',
   claimMethod: 'mail_form',
@@ -19,7 +27,9 @@ const o: Opportunity = {
   formTemplateId: 'settlement_claim',
   updatedAt: '2026-01-01',
   mailingAddress: 'Settlement Administrator\nPO Box 1\nSeattle, WA',
-  extraFields: [{ key: 'planTier', label: 'Plan tier', type: 'select', options: ['Fan', 'Mega Fan'] }],
+  extraFields: [
+    { key: 'planTier', label: 'Plan tier', type: 'select', options: ['Fan', 'Mega Fan'] },
+  ],
 };
 
 describe('documents', () => {
@@ -31,12 +41,20 @@ describe('documents', () => {
   });
 
   it('prefills string/number profile values only', () => {
-    const v = prefillFromProfile(fieldsForOpportunity(o), { firstName: 'Rin', services: ['x'], consPerYear: 2, city: 'Osaka' });
+    const v = prefillFromProfile(fieldsForOpportunity(o), {
+      firstName: 'Rin',
+      services: ['x'],
+      consPerYear: 2,
+      city: 'Osaka',
+    });
     expect(v).toEqual({ firstName: 'Rin', city: 'Osaka' });
   });
 
   it('reports missing required fields', () => {
-    const missing = missingRequiredFields(fieldsForOpportunity(o), { firstName: 'Rin', lastName: ' ' });
+    const missing = missingRequiredFields(fieldsForOpportunity(o), {
+      firstName: 'Rin',
+      lastName: ' ',
+    });
     expect(missing.map((f) => f.key)).toContain('lastName');
     expect(missing.map((f) => f.key)).not.toContain('firstName');
     expect(missing.map((f) => f.key)).not.toContain('phone');
@@ -45,7 +63,17 @@ describe('documents', () => {
   it('renders escaped HTML with recipient, sender and disclaimer', () => {
     const html = renderFormHtml(
       o,
-      { firstName: 'Rin', lastName: '<Tohsaka>', email: 'rin@example.com', addressLine1: '1 Fuyuki St', city: 'Fuyuki', state: 'HY', postalCode: '000', country: 'JP', accountIdentifier: 'rin@example.com' },
+      {
+        firstName: 'Rin',
+        lastName: '<Tohsaka>',
+        email: 'rin@example.com',
+        addressLine1: '1 Fuyuki St',
+        city: 'Fuyuki',
+        state: 'HY',
+        postalCode: '000',
+        country: 'JP',
+        accountIdentifier: 'rin@example.com',
+      },
       '2026-09-17T10:00:00.000Z'
     );
     expect(html).toContain('&lt;Tohsaka&gt;');
@@ -56,6 +84,33 @@ describe('documents', () => {
     expect(html).toContain('penalty of perjury');
   });
 
+  it('uses user-supplied recipient fields when the catalog has no fixed address', () => {
+    const evergreen: Opportunity = {
+      ...o,
+      id: 'air',
+      claimMethod: 'email',
+      mailingAddress: undefined,
+      formTemplateId: 'travel_compensation',
+      extraFields: [{ key: 'recipientEmail', label: 'Airline email', type: 'email' }],
+    };
+    const html = renderFormHtml(
+      evergreen,
+      {
+        firstName: 'Rin',
+        lastName: 'T',
+        recipientName: 'Delta Baggage',
+        recipientEmail: 'bags@example.com',
+        carrier: 'Delta',
+        bookingReference: 'ABC123',
+        travelDate: '2026-07-01',
+        issue: 'Lost or damaged baggage',
+      },
+      '2026-09-17T10:00:00.000Z'
+    );
+    expect(html).toContain('Delta Baggage — bags@example.com');
+    expect(html).toContain('Lost or damaged baggage');
+  });
+
   it('formTitle combines template and opportunity', () => {
     expect(formTitle(o)).toBe('Settlement Claim Form — Crunchyroll privacy settlement');
   });
@@ -63,7 +118,9 @@ describe('documents', () => {
 
 describe('htmlToPlainText', () => {
   it('strips tags and decodes entities', () => {
-    const text = htmlToPlainText('<html><head><style>p{}</style></head><body><h1>Hi &amp; bye</h1><p>Line<br/>two</p></body></html>');
+    const text = htmlToPlainText(
+      '<html><head><style>p{}</style></head><body><h1>Hi &amp; bye</h1><p>Line<br/>two</p></body></html>'
+    );
     expect(text).toBe('Hi & bye\n\nLine\ntwo');
   });
 });

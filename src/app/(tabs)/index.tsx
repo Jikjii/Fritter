@@ -42,13 +42,20 @@ export default function DiscoverScreen() {
   let unlockedLeft = FREE_UNLOCKED_COUNT;
 
   return (
-    <Screen refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={theme.primary} />}>
+    <Screen
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={theme.primary} />
+      }>
       <View style={styles.header}>
         <ThemedText type="caption" themeColor="textSecondary">
           {firstName ? `${firstName.toUpperCase()}, YOU MAY BE OWED` : 'YOU MAY BE OWED'}
         </ThemedText>
         <ThemedText type="money" themeColor="money">
-          {isPro ? formatMoney(estimate.total) : estimate.total > 0 ? `up to ${formatMoney(estimate.high, { compact: true })}` : '$0'}
+          {isPro
+            ? formatMoney(estimate.total)
+            : estimate.total > 0
+              ? `up to ${formatMoney(estimate.high, { compact: true })}`
+              : '$0'}
         </ThemedText>
         <ThemedText type="small" themeColor="textSecondary">
           {estimate.likelyCount + estimate.possibleCount > 0
@@ -67,7 +74,11 @@ export default function DiscoverScreen() {
         </Card>
       ) : null}
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} style={styles.chipRow}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.chips}
+        style={styles.chipRow}>
         {(['all', ...OPPORTUNITY_CATEGORIES] as const).map((c) => {
           const selected = filter === c;
           const label = c === 'all' ? 'All' : `${CategoryStyle[c].emoji} ${CategoryStyle[c].label}`;
@@ -77,8 +88,16 @@ export default function DiscoverScreen() {
               accessibilityRole="tab"
               accessibilityState={{ selected }}
               onPress={() => setFilter(c)}
-              style={[styles.chip, { backgroundColor: selected ? theme.primary : theme.backgroundElement, borderColor: selected ? theme.primary : theme.border }]}>
-              <ThemedText type="smallBold" style={{ color: selected ? theme.textInverse : theme.text }}>
+              style={[
+                styles.chip,
+                {
+                  backgroundColor: selected ? theme.primary : theme.backgroundElement,
+                  borderColor: selected ? theme.primary : theme.border,
+                },
+              ]}>
+              <ThemedText
+                type="smallBold"
+                style={{ color: selected ? theme.textInverse : theme.text }}>
                 {label}
               </ThemedText>
             </Pressable>
@@ -100,12 +119,21 @@ export default function DiscoverScreen() {
             if (unlockedLeft > 0) unlockedLeft -= 1;
             else locked = true;
           }
-          return <OpportunityCard key={opportunity.id} opportunity={opportunity} status={eligibility.status} closed={closed} locked={locked} />;
+          return (
+            <OpportunityCard
+              key={opportunity.id}
+              opportunity={opportunity}
+              status={eligibility.status}
+              closed={closed}
+              locked={locked}
+            />
+          );
         })
       )}
 
       <ThemedText type="caption" themeColor="textSecondary" style={styles.footnote}>
-        Fritter lists public settlements, refund programs and passenger-rights claims. It is not a law firm. Amounts are administrator or company estimates.
+        Fritter lists public settlements, refund programs and passenger-rights claims. It is not a
+        law firm. Amounts are administrator or company estimates.
       </ThemedText>
     </Screen>
   );
@@ -115,6 +143,11 @@ const styles = StyleSheet.create({
   header: { gap: Spacing.one },
   chipRow: { marginHorizontal: -Spacing.three },
   chips: { flexDirection: 'row', gap: Spacing.two, paddingHorizontal: Spacing.three },
-  chip: { paddingHorizontal: Spacing.three, paddingVertical: Spacing.two, borderRadius: Radius.pill, borderWidth: 1 },
+  chip: {
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
+    borderRadius: Radius.pill,
+    borderWidth: 1,
+  },
   footnote: { textAlign: 'center', marginTop: Spacing.three },
 });

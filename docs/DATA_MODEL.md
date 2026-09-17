@@ -17,7 +17,7 @@ Fritter has five nouns. Everything on screen is a view of one of them.
 ## Opportunity
 
 A single "payout" in the Discover feed. Categories are tuned for the niche: `settlement`,
-`refund`, `convention`, `travel`, `commission`, `rewards`.
+`refund`, `convention`, `travel`, `commission`.
 
 ```json
 {
@@ -33,7 +33,10 @@ A single "payout" in the Discover feed. Categories are tuned for the niche: `set
   ],
   "estimatedPayoutMin": 10,
   "estimatedPayoutMax": 30,
+  "payoutKind": "cash",
+  "status": "closed",
   "deadline": "2024-12-12",
+  "deadlineKind": "claim_deadline",
   "proofRequired": "Account email. No receipt needed.",
   "claimMethod": "online_form",
   "claimUrl": "https://example.com/claim",
@@ -42,7 +45,10 @@ A single "payout" in the Discover feed. Categories are tuned for the niche: `set
   "confidenceNote": "Real settlement; claim window closed 2024-12-12. Kept as social proof.",
   "formTemplateId": "settlement_claim",
   "updatedAt": "2026-09-17",
-  "tags": ["anime", "streaming", "privacy"]
+  "verifiedBy": "",
+  "hidden": false,
+  "tags": ["anime", "streaming", "privacy"],
+  "extraFields": [{ "key": "recipientEmail", "label": "Airline email", "type": "email", "required": true }]
 }
 ```
 
@@ -50,14 +56,28 @@ Field notes:
 
 - `eligibility[]` – rules evaluated against `UserProfile` by `evaluateEligibility()`.
   `profileKey` **must** be set by an onboarding question or the rule is permanently "unanswered".
-  Operators: `equals`, `includes` (array contains / string equals), `gte`, `lte`
-  (numbers or array length), `truthy` (`"no"`, `"none"`, `false`, `0`, `""` are falsy).
-- `estimatedPayoutMin/Max` – whole USD. The app shows the range and uses the midpoint for totals.
+  Operators: `equals`, `in` (value is one of a list), `includes` (array contains), `includesAny`,
+  `notIncludes`, `gte`, `lte` (numbers or array length), `truthy` (`"no"`, `"none"`, `false`,
+  `0`, `""` are falsy). Each rule may carry a `label` shown in the requirements checklist.
+- `estimatedPayoutMin/Max` – USD. Shown as a range; the **headline total sums `estimatedPayoutMax`**
+  of summable items only (see `payoutKind`).
+- `payoutKind` – `cash` | `credit` (summable) | `equals_paid` ("what you paid", never summed) |
+  `statutory_cap` ("up to $X · legal cap", never summed) | `non_cash` (free repair, never summed).
+- `status` – `open` (default) | `watching` (lawsuit filed, no claims process: renders "$0 today",
+  amounts must be 0) | `closed`.
+- `deadlineKind` – `claim_deadline` (drives the "closes soon" reminder) | `hearing` (informational,
+  e.g. a fairness hearing before automatic credits) | `none`.
+- `verifiedBy` / `updatedAt` – who reviewed it and when. Items older than `VERIFICATION_TTL_DAYS`
+  (60) render "Needs re-check" and drop out of totals until re-verified.
+- `hidden` – remote kill switch; hidden items never render.
+- `extraFields[]` with keys `recipientName`, `recipientEmail`, `recipientAddress` let the user name
+  the recipient for evergreen letters (airline, con organizer, shop) when the catalog cannot.
 - `deadline` – `YYYY-MM-DD`, `"rolling"` (no deadline), or `"unknown"`. Past deadlines are
   excluded from the owed estimate and shown as "Closed".
 - `claimMethod` – `online_form` (open `claimUrl`), `mail_form` (generate PDF, mail to
-  `mailingAddress`), `email` (generate letter, send to `claimEmail`), `in_app_request`
-  (instructions), `automatic` (nothing to do; informational).
+  `mailingAddress` or the user-entered `recipientAddress`), `email` (generate letter, send to
+  `claimEmail` or `recipientEmail`), `in_app_request` (instructions; also used for Watchlist
+  items), `automatic` (nothing to do; informational).
 - `confidence` – honesty label. `verified_current` and `verified_past` were confirmed by a human on
   `updatedAt`. `plausible_unverified` and `illustrative` render with a "Verify before you file"
   banner. **Ship only `verified_*` items in production.**
@@ -79,12 +99,17 @@ Identity fields (used to prefill forms) plus one key per onboarding question.
   "postalCode": "90001",
   "country": "US",
 
+  "ageConfirmedAt": "2026-09-17T18:00:00.000Z",
+
   "fanType": ["anime", "cosplay", "figures"],
-  "services": ["crunchyroll", "steam", "nintendo"],
-  "consPerYear": 3,
-  "travelsForCons": true,
-  "commissionsBought": true,
-  "spendTier": "500-2000"
+  "country": "us",
+  "services": ["crunchyroll", "steam", "nintendo", "amazon_prime"],
+  "amazonClaimNotice": "unsure",
+  "shops": ["hot_topic_boxlunch", "etsy"],
+  "purchases": ["psn_digital_2019_2023"],
+  "conMishaps": ["lost_bag"],
+  "payMethods": ["credit_card", "paypal_goods"],
+  "hadFacebookPublicProfile": "unsure"
 }
 ```
 
@@ -131,6 +156,7 @@ Wallet totals: **potential** = saved + in_progress + submitted; **pending** = su
   "fields": { "firstName": "Rin", "lastName": "Tohsaka", "accountIdentifier": "rin@example.com" },
   "html": "<!doctype html>…",
   "createdAt": "2026-09-18T09:10:00.000Z",
+  "attestedAt": "2026-09-18T09:10:00.000Z",
   "fileUri": "file:///…/Print/abc.pdf"
 }
 ```
@@ -155,12 +181,18 @@ by `expo-print` and shared with `expo-sharing`. The HTML is stored so the PDF ca
 }
 ```
 
-Screen types: `hook`, `question`, `multiQuestion`, `identity`, `loading`, `chart`, `reveal`,
-`socialProof`, `notifications`, `paywall`. The renderer in `src/app/onboarding/[step].tsx`
-switches on `type`; the flow is fully data-driven so copy can be A/B tested without code changes.
+Screen types: `hook` (options render as sourced stat cards), `question`, `multiQuestion`,
+`identity`, `loading`, `chart` (options are bars: `label` with an OPEN/AUTOMATIC/CLOSED tag,
+`value` is the amount), `reveal`, `socialProof`, `notifications`, `paywall`. A screen with
+`showIf` (an `EligibilityRule`) is skipped when the rule fails against the answers so far.
+The renderer in `src/app/onboarding/[step].tsx` switches on `type`; the flow is fully
+data-driven so copy can be A/B tested without code changes.
 
 ## Derived values
 
 - `EligibilityResult` – `{ status: likely | possible | unlikely | unknown, matched, total, unmet[], unanswered[] }`
-- `OwedEstimate` – `{ total, low, high, likelyCount, possibleCount, byCategory }` — the "You may be
-  owed $X" number. Only counts open, non-`verified_past` items the user is likely/possibly eligible for.
+- `OwedEstimate` – `{ total, low, high, likelyCount, possibleCount, matchCount, sumCount,
+  equalsPaidCount, watchCount, closedMatchCount, byCategory }`. `total` sums `estimatedPayoutMax`
+  of **summable** matches only: `verified_current`, not stale, not watching, not closed, `cash`
+  or `credit`. The other counts drive the reveal copy ("N refund what you paid", "K on your Watchlist",
+  "M you already missed").

@@ -4,15 +4,35 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Badge, Card } from '@/components/ui';
 import { CategoryStyle, Spacing } from '@/constants/theme';
-import { daysUntil, formatRange } from '@/domain/estimate';
+import {
+  daysUntil,
+  isVerified,
+  isWatching,
+  payoutLabel,
+  statusBadge,
+  type StatusBadge,
+} from '@/domain/estimate';
 import type { EligibilityStatus, Opportunity } from '@/domain/types';
 import { useTheme } from '@/hooks/use-theme';
 
-export const ELIGIBILITY_BADGE: Record<EligibilityStatus, { label: string; color: 'money' | 'gold' | 'primary' | 'danger' }> = {
+export const ELIGIBILITY_BADGE: Record<
+  EligibilityStatus,
+  { label: string; color: 'money' | 'gold' | 'primary' | 'danger' }
+> = {
   likely: { label: 'You likely qualify', color: 'money' },
   possible: { label: 'You may qualify', color: 'gold' },
   unknown: { label: 'Check eligibility', color: 'primary' },
   unlikely: { label: 'Probably not you', color: 'danger' },
+};
+
+export const STATUS_BADGE: Record<
+  StatusBadge,
+  { label: string; color: 'money' | 'gold' | 'primary' | 'danger' }
+> = {
+  open: { label: 'OPEN', color: 'money' },
+  automatic: { label: 'AUTOMATIC', color: 'primary' },
+  watching: { label: 'WATCHING', color: 'gold' },
+  closed: { label: 'CLOSED', color: 'danger' },
 };
 
 export function deadlineLabel(deadline: string, closed: boolean): string {
@@ -37,20 +57,34 @@ export type OpportunityCardProps = {
 };
 
 /** Discover-feed row. Tapping opens the detail screen (or the paywall when locked). */
-export function OpportunityCard({ opportunity: o, status, closed = false, locked = false, compact = false }: OpportunityCardProps) {
+export function OpportunityCard({
+  opportunity: o,
+  status,
+  closed = false,
+  locked = false,
+  compact = false,
+}: OpportunityCardProps) {
   const theme = useTheme();
   const cat = CategoryStyle[o.category];
   const badge = ELIGIBILITY_BADGE[status];
-  const unverified = o.confidence === 'plausible_unverified' || o.confidence === 'illustrative';
-  const href = locked ? '/paywall' : ({ pathname: '/opportunity/[id]', params: { id: o.id } } as const);
+  const unverified = !isVerified(o);
+  const sBadge = STATUS_BADGE[statusBadge(o)];
+  const watching = isWatching(o);
+  const href = locked
+    ? '/paywall'
+    : ({ pathname: '/opportunity/[id]', params: { id: o.id } } as const);
 
   return (
     <Link href={href} asChild>
-      <Pressable accessibilityRole="button" accessibilityLabel={`${o.title}, ${badge.label}`} style={({ pressed }) => ({ opacity: pressed ? 0.85 : closed ? 0.6 : 1 })}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${o.title}, ${badge.label}`}
+        style={({ pressed }) => ({ opacity: pressed ? 0.85 : closed ? 0.6 : 1 })}>
         <Card style={styles.card}>
           <View style={styles.topRow}>
             <Badge label={cat.label} emoji={cat.emoji} color={cat.color} />
-            {!closed ? <Badge label={badge.label} color={badge.color} /> : <Badge label="Closed" color="danger" />}
+            <Badge label={sBadge.label} color={sBadge.color} />
+            {!closed ? <Badge label={badge.label} color={badge.color} /> : null}
           </View>
           <ThemedText type="heading" numberOfLines={2}>
             {o.title}
@@ -61,8 +95,10 @@ export function OpportunityCard({ opportunity: o, status, closed = false, locked
             </ThemedText>
           ) : null}
           <View style={styles.bottomRow}>
-            <ThemedText type="subtitle" style={{ color: theme.money }}>
-              {locked ? '$•••' : formatRange(o)}
+            <ThemedText
+              type={watching ? 'heading' : 'subtitle'}
+              style={{ color: watching ? theme.textSecondary : theme.money }}>
+              {locked && !watching ? '$•••' : payoutLabel(o)}
             </ThemedText>
             <View style={styles.meta}>
               <ThemedText type="caption" themeColor="textSecondary">
@@ -73,9 +109,15 @@ export function OpportunityCard({ opportunity: o, status, closed = false, locked
               </ThemedText>
             </View>
           </View>
+          {watching ? (
+            <ThemedText type="caption" themeColor="textSecondary">
+              No claims process yet — get alerted the day one opens.
+            </ThemedText>
+          ) : null}
           {unverified ? (
             <ThemedText type="caption" themeColor="warning">
-              ⚠︎ Example entry — verify before filing
+              ⚠︎ {o.confidence === 'illustrative' ? 'Example entry' : 'Not yet verified'} — verify
+              before filing
             </ThemedText>
           ) : null}
         </Card>
@@ -87,6 +129,11 @@ export function OpportunityCard({ opportunity: o, status, closed = false, locked
 const styles = StyleSheet.create({
   card: { gap: Spacing.two },
   topRow: { flexDirection: 'row', gap: Spacing.two, flexWrap: 'wrap' },
-  bottomRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: Spacing.two },
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    gap: Spacing.two,
+  },
   meta: { alignItems: 'flex-end', gap: Spacing.half },
 });

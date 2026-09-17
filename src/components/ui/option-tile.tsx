@@ -41,7 +41,11 @@ export function OptionTile({ label, emoji, selected, onPress, multi }: OptionTil
             borderRadius: multi ? 6 : Radius.pill,
           },
         ]}>
-        {selected ? <ThemedText type="caption" style={{ color: theme.textInverse }}>✓</ThemedText> : null}
+        {selected ? (
+          <ThemedText type="caption" style={{ color: theme.textInverse }}>
+            ✓
+          </ThemedText>
+        ) : null}
       </View>
     </Pressable>
   );

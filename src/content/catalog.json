@@ -1,1 +1,1138 @@
-[]
+[
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "anime",
+      "streaming",
+      "privacy",
+      "vppa"
+    ],
+    "id": "crunchyroll-vppa-2023",
+    "title": "Crunchyroll video-privacy settlement (2023)",
+    "company": "Crunchyroll (Sony Pictures)",
+    "category": "settlement",
+    "summary": "Crunchyroll allegedly shared subscribers' viewing data with Facebook through the Meta Pixel. The $16M settlement paid roughly $30 per approved claimant; payments went out around April 2024.",
+    "whoQualifies": "US residents who were Crunchyroll subscribers or registered users during the class period and filed by December 12, 2023. No new claims are accepted.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "crunchyroll",
+        "label": "Had a Crunchyroll account"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 30,
+    "estimatedPayoutMax": 30,
+    "payoutKind": "cash",
+    "status": "closed",
+    "deadline": "2023-12-12",
+    "deadlineKind": "claim_deadline",
+    "proofRequired": "Historical: claim form and Crunchyroll account email.",
+    "claimMethod": "online_form",
+    "claimUrl": "https://www.crvppasettlement.com/",
+    "sourceUrl": "https://www.crvppasettlement.com/",
+    "confidence": "verified_past",
+    "confidenceNote": "Claims closed Dec 12, 2023; final approval Jan 2024; payments ~April 2024 (crvppasettlement.com). Kept as history so fans see the pattern.",
+    "formTemplateId": "settlement_claim"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "anime",
+      "streaming",
+      "privacy",
+      "watch"
+    ],
+    "id": "crunchyroll-2026-lawsuits-watch",
+    "title": "Crunchyroll 2026 lawsuits: viewing-data case and March 2026 breach",
+    "company": "Crunchyroll LLC",
+    "category": "settlement",
+    "summary": "Two active class actions, no settlement in either. One alleges the app sent email addresses, device IDs and exact titles watched to a marketing vendor since 2022; the other alleges a March 2026 breach at an outsourcing partner exposed about 6.8 million users' data. There is no claim form and no payout yet.",
+    "whoQualifies": "Not payable today. Likely classes if settled: US Crunchyroll users who watched video in the app since 2022, and US account holders whose data was in the March 2026 breach.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "crunchyroll",
+        "label": "Had a Crunchyroll account"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "cash",
+    "status": "watching",
+    "deadline": "unknown",
+    "deadlineKind": "none",
+    "proofRequired": "Nothing yet. Keep your Crunchyroll account email, subscription history and any breach-notification email.",
+    "claimMethod": "in_app_request",
+    "sourceUrl": "https://www.animenewsnetwork.com/news/2026-03-10/class-action-lawsuit-against-crunchyroll-alleges-disclosure-of-user-information-to-3rd-party-/.235088",
+    "confidence": "verified_current",
+    "confidenceNote": "Filings reported by Anime News Network (Mar 10, 2026) and classaction.org. No settlement, no claims process, no payout as of 2026-09-17.",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "gaming",
+      "playstation",
+      "automatic"
+    ],
+    "id": "psn-digital-games-2026",
+    "title": "PlayStation Store antitrust settlement: automatic PSN credit",
+    "company": "Sony Interactive Entertainment",
+    "category": "settlement",
+    "summary": "Sony settled claims that ending third-party download-code sales in April 2019 inflated digital game prices. About 4.4 million US PSN accounts that bought qualifying digital games between April 1, 2019 and December 31, 2023 receive PlayStation Store credit automatically, prorated by purchases ($0.91 to $33.66). Final fairness hearing October 15, 2026.",
+    "whoQualifies": "US PSN account holders who bought qualifying digital games on the PlayStation Store between April 1, 2019 and December 31, 2023. Active accounts need to do nothing.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "playstation",
+        "label": "Had a PlayStation Network account"
+      },
+      {
+        "profileKey": "purchases",
+        "operator": "includes",
+        "value": "psn_digital_2019_2023",
+        "label": "Bought digital games on PlayStation Store 2019–2023"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0.91,
+    "estimatedPayoutMax": 33.66,
+    "payoutKind": "credit",
+    "status": "open",
+    "deadline": "2026-10-15",
+    "deadlineKind": "hearing",
+    "proofRequired": "None for active accounts. Deactivated accounts had to contact the administrator by Aug 27, 2026.",
+    "claimMethod": "automatic",
+    "sourceUrl": "https://psndigitalgamessettlement.com/home/",
+    "confidence": "verified_current",
+    "confidenceNote": "psndigitalgamessettlement.com: preliminary approval April 2026, automatic credit $0.91–$33.66, fairness hearing Oct 15, 2026 (a hearing, not a claim deadline).",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "gaming",
+      "mobile",
+      "gacha",
+      "automatic"
+    ],
+    "id": "google-play-700m-2026",
+    "title": "Google Play antitrust settlement: automatic PayPal/Venmo payment ($2 minimum)",
+    "company": "Google",
+    "category": "settlement",
+    "summary": "53 state attorneys general settled claims that Google Play billing inflated app and in-app prices (gacha pulls, mobile RPG top-ups, subscriptions bought through Play). A $630M consumer fund pays an estimated 102 million people automatically via PayPal or Venmo at the email or phone tied to their Google account; a supplemental claims process follows for people who cannot be paid that way.",
+    "whoQualifies": "US consumers who made app, in-app or subscription purchases through Google Play between August 16, 2016 and September 30, 2023.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "google_play",
+        "label": "Used Google Play"
+      },
+      {
+        "profileKey": "purchases",
+        "operator": "includes",
+        "value": "play_purchases_2016_2023",
+        "label": "Made Google Play purchases 2016–2023"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 2,
+    "estimatedPayoutMax": 2,
+    "payoutKind": "cash",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "None for automatic payments. The supplemental claim (when open) needs your Google account email.",
+    "claimMethod": "automatic",
+    "sourceUrl": "https://www.doj.state.or.us/media-home/news-media-releases/ag-rayfield-secures-700-million-google-settlement-details-consumer-payout/",
+    "confidence": "verified_current",
+    "confidenceNote": "State AG releases: final approval Apr 30, 2026, automatic PayPal/Venmo payments, $2 published minimum (more for heavier spenders; upper amount not published, so $2 is used).",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "amazon",
+      "subscription",
+      "ftc"
+    ],
+    "id": "amazon-prime-ftc-2026",
+    "title": "Amazon Prime FTC settlement: claim-notice refunds up to $200",
+    "company": "Amazon",
+    "category": "settlement",
+    "summary": "Amazon settled FTC charges of enrolling people in Prime without consent and obstructing cancellation. Automatic refunds went out first; since 2026 Amazon has been emailing and mailing claim notices to eligible members who did not get an automatic payment, with the maximum payment raised to $200. Relevant to anyone who uses Prime for figure, manga and Blu-ray orders.",
+    "whoQualifies": "US Prime members enrolled through a challenged flow, or who tried and failed to cancel, between June 23, 2019 and June 23, 2025, who receive a claim notice from Amazon.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "amazon_prime",
+        "label": "Had Amazon Prime"
+      },
+      {
+        "profileKey": "amazonClaimNotice",
+        "operator": "in",
+        "value": [
+          "yes",
+          "unsure"
+        ],
+        "label": "Received (or may have received) a Prime refund claim notice"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 200,
+    "payoutKind": "cash",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "The claim notice Amazon sends (email or mail). Choose check, PayPal or Venmo. Real notices come from Amazon or the FTC, never ask for a fee.",
+    "claimMethod": "online_form",
+    "claimUrl": "https://www.ftc.gov/enforcement/refunds/amazon-refunds",
+    "sourceUrl": "https://www.ftc.gov/enforcement/refunds/amazon-refunds",
+    "confidence": "verified_current",
+    "confidenceNote": "FTC refund page and Sept 2026 press release: maximum raised to $200, claim notices ongoing. Eligibility depends on receiving a notice, so the minimum is $0.",
+    "formTemplateId": "refund_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "gaming",
+      "ubisoft",
+      "shutdown"
+    ],
+    "id": "ubisoft-the-crew-2026",
+    "title": "Ubisoft “The Crew” shutdown settlement",
+    "company": "Ubisoft",
+    "category": "settlement",
+    "summary": "After Ubisoft shut off The Crew's servers on March 31, 2024 and made the game unplayable, players sued. A $2M settlement offered $7 cash or $15 Ubisoft store credit per claimant. Claims closed June 11, 2026.",
+    "whoQualifies": "US purchasers of The Crew (2014) or its in-game content who filed by June 11, 2026. No new claims are accepted.",
+    "eligibility": [
+      {
+        "profileKey": "purchases",
+        "operator": "includes",
+        "value": "the_crew",
+        "label": "Owned Ubisoft's The Crew"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 7,
+    "estimatedPayoutMax": 15,
+    "payoutKind": "cash",
+    "status": "closed",
+    "deadline": "2026-06-11",
+    "deadlineKind": "claim_deadline",
+    "proofRequired": "Historical: proof of purchase or platform account showing ownership.",
+    "claimMethod": "online_form",
+    "claimUrl": "https://www.crewgamesettlement.com/",
+    "sourceUrl": "https://www.crewgamesettlement.com/",
+    "confidence": "verified_past",
+    "confidenceNote": "crewgamesettlement.com shows claim submission closed; deadline June 11, 2026.",
+    "formTemplateId": "settlement_claim"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "gaming",
+      "retail",
+      "privacy",
+      "vppa"
+    ],
+    "id": "gamestop-vppa-2025",
+    "title": "GameStop video-privacy settlement (2025)",
+    "company": "GameStop",
+    "category": "settlement",
+    "summary": "GameStop allegedly shared online video-game purchase data with Facebook. Claimants got $4.32 cash or a $10 GameStop voucher; payments began December 31, 2025. Closed, but the eligibility pattern (public Facebook profile + online purchase) recurs across retailer privacy cases.",
+    "whoQualifies": "People who bought a video game on GameStop.com between Aug 18, 2020 and Apr 7, 2025 while having a public Facebook profile under their real name, who filed by Aug 15, 2025.",
+    "eligibility": [
+      {
+        "profileKey": "shops",
+        "operator": "includes",
+        "value": "gamestop",
+        "label": "Bought from GameStop.com"
+      },
+      {
+        "profileKey": "hadFacebookPublicProfile",
+        "operator": "equals",
+        "value": "yes",
+        "label": "Had a public Facebook profile under your real name"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 4.32,
+    "estimatedPayoutMax": 10,
+    "payoutKind": "cash",
+    "status": "closed",
+    "deadline": "2025-08-15",
+    "deadlineKind": "claim_deadline",
+    "proofRequired": "Historical: claim form attestation.",
+    "claimMethod": "online_form",
+    "claimUrl": "https://www.gamestopvppasettlement.com/",
+    "sourceUrl": "https://www.gamestopvppasettlement.com/",
+    "confidence": "verified_past",
+    "confidenceNote": "gamestopvppasettlement.com: deadline Aug 15, 2025; final approval Oct 16, 2025; payments Dec 31, 2025.",
+    "formTemplateId": "settlement_claim"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "creator",
+      "cosplay",
+      "privacy",
+      "vppa"
+    ],
+    "id": "patreon-vppa-2025",
+    "title": "Patreon video-privacy settlement (2025)",
+    "company": "Patreon",
+    "category": "settlement",
+    "summary": "Patreon allegedly sent users' video-viewing data to Facebook. US users who watched video on Patreon.com between April 1, 2016 and September 23, 2024 while holding a Facebook account could claim; estimated payouts were $35–$175. Claims closed January 1, 2025; payments began November 12, 2025.",
+    "whoQualifies": "US Patreon users who requested or obtained video content on Patreon.com between April 1, 2016 and September 23, 2024 and had a Facebook account. Claims closed.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "patreon",
+        "label": "Had a Patreon account"
+      },
+      {
+        "profileKey": "hadFacebookPublicProfile",
+        "operator": "equals",
+        "value": "yes",
+        "label": "Had a public Facebook profile under your real name"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 35,
+    "estimatedPayoutMax": 175,
+    "payoutKind": "cash",
+    "status": "closed",
+    "deadline": "2025-01-01",
+    "deadlineKind": "claim_deadline",
+    "proofRequired": "Historical: Facebook profile link and attestation.",
+    "claimMethod": "online_form",
+    "claimUrl": "https://patreonsettlement.com/",
+    "sourceUrl": "https://patreonsettlement.com/faq/",
+    "confidence": "verified_past",
+    "confidenceNote": "patreonsettlement.com FAQ: claims closed Jan 1, 2025; payments from Nov 12, 2025.",
+    "formTemplateId": "settlement_claim"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "merch",
+      "retail",
+      "breach",
+      "watch"
+    ],
+    "id": "hot-topic-breach-watch",
+    "title": "Hot Topic / BoxLunch / Torrid 2024 data breach litigation",
+    "company": "Hot Topic, Inc.",
+    "category": "settlement",
+    "summary": "The October 2024 breach exposed roughly 54–57 million customer records (names, emails, birthdays, phones, partial payment data) from the stores where most US anime merch is bought. Class actions are active, but there is no court-approved settlement and no claim form. Warning: hottopicclassaction.com is a different, closed case about discount advertising, not the breach.",
+    "whoQualifies": "Not payable today. Likely class if settled: US customers with an account or purchase at Hot Topic, BoxLunch or Torrid before October 2024.",
+    "eligibility": [
+      {
+        "profileKey": "shops",
+        "operator": "includes",
+        "value": "hot_topic_boxlunch",
+        "label": "Shopped at Hot Topic, BoxLunch or Torrid"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "cash",
+    "status": "watching",
+    "deadline": "unknown",
+    "deadlineKind": "none",
+    "proofRequired": "Nothing yet. Save order confirmations, your loyalty-account email and any breach notice.",
+    "claimMethod": "in_app_request",
+    "sourceUrl": "https://www.classaction.org/data-breach-lawsuits/hot-topic-october-2024",
+    "confidence": "verified_current",
+    "confidenceNote": "Breach and litigation tracked by classaction.org. As of 2026-09-17 there is no approved settlement and no claims process.",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "gaming",
+      "nintendo",
+      "watch"
+    ],
+    "id": "nintendo-tariff-suit-watch",
+    "title": "Nintendo tariff-refund class action",
+    "company": "Nintendo of America",
+    "category": "settlement",
+    "summary": "Filed April 2026 in Washington federal court. Plaintiffs say Nintendo raised Switch, Switch 2 and accessory prices citing tariffs later ruled unlawful, then sought its own tariff refund while keeping consumers' money. Nintendo moved to dismiss in July 2026; no ruling, no class certified, no settlement, no money.",
+    "whoQualifies": "Not payable today. Proposed class: US buyers of price-hiked Nintendo hardware and accessories in 2025–2026.",
+    "eligibility": [
+      {
+        "profileKey": "purchases",
+        "operator": "includes",
+        "value": "nintendo_hardware_2025",
+        "label": "Bought Nintendo hardware or accessories in 2025–26"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "cash",
+    "status": "watching",
+    "deadline": "unknown",
+    "deadlineKind": "none",
+    "proofRequired": "Nothing now. Keep the receipt and serial number for any Nintendo hardware or accessory bought in 2025–26.",
+    "claimMethod": "in_app_request",
+    "sourceUrl": "https://www.gamefile.news/p/nintendo-tariff-lawsuit-response",
+    "confidence": "verified_current",
+    "confidenceNote": "Lawsuit and July 2026 motion to dismiss reported by Game File and Kotaku. Any payout is speculative.",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "creator",
+      "streamer",
+      "cosplay",
+      "watch"
+    ],
+    "id": "twitch-ai-training-watch",
+    "title": "Twitch / Amazon AI-training class action",
+    "company": "Twitch (Amazon)",
+    "category": "settlement",
+    "summary": "Filed August 2026 after Twitch enrolled every channel by default into letting Amazon train generative AI on streams, clips and chat, with the opt-out setting arriving only in August 2026. Claims include breach of contract and unjust enrichment. No settlement, no payout.",
+    "whoQualifies": "Not payable today. Proposed class: Twitch content creators whose content was used to train Amazon's AI without consent.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "twitch",
+        "label": "Have a Twitch account"
+      },
+      {
+        "profileKey": "fanType",
+        "operator": "includes",
+        "value": "streamer",
+        "label": "Stream or create content"
+      },
+      {
+        "profileKey": "country",
+        "operator": "equals",
+        "value": "us",
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "cash",
+    "status": "watching",
+    "deadline": "unknown",
+    "deadlineKind": "none",
+    "proofRequired": "Nothing now. Save your channel URL, the date you first streamed, and a screenshot of your AI-training setting.",
+    "claimMethod": "in_app_request",
+    "sourceUrl": "https://www.tubefilter.com/2026/08/25/twitch-amazon-lawsuit-warren-pandiscia-ai-training/",
+    "confidence": "verified_current",
+    "confidenceNote": "Filing reported by Tubefilter and Courthouse News (Aug 2026). No payout of any kind exists.",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "gaming",
+      "nintendo",
+      "repair"
+    ],
+    "id": "joycon-drift-free-repair",
+    "title": "Joy-Con drift: free out-of-warranty repair",
+    "company": "Nintendo of America",
+    "category": "refund",
+    "summary": "US Joy-Con drift class actions were dismissed or sent to arbitration, but Nintendo of America repairs drifting Joy-Cons free of charge even after warranty through its online repair form, with a prepaid shipping label. Not cash, but it replaces a controller that costs about $40–$80 new.",
+    "whoQualifies": "US or Canadian owners of Switch / Switch Lite / OLED Joy-Con controllers with analog-stick drift not caused by damage, modification or misuse.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "nintendo",
+        "label": "Have a Nintendo Account"
+      },
+      {
+        "profileKey": "purchases",
+        "operator": "includes",
+        "value": "joycon_drift",
+        "label": "Own Joy-Cons with stick drift"
+      },
+      {
+        "profileKey": "country",
+        "operator": "in",
+        "value": [
+          "us",
+          "ca"
+        ],
+        "label": "Live in the US or Canada"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "non_cash",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Console serial number, Joy-Con serials, Nintendo Account email, a description of the drift.",
+    "claimMethod": "online_form",
+    "claimUrl": "https://en-americas-support.nintendo.com/app/ask/ht/789",
+    "sourceUrl": "https://en-americas-support.nintendo.com/app/ask/ht/789",
+    "confidence": "verified_current",
+    "confidenceNote": "Nintendo support practice in North America; Nintendo reserves the right to refuse in exceptional cases. No dollar figure is shown because it is a repair, not cash.",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "anime",
+      "funimation",
+      "digital"
+    ],
+    "id": "funimation-digital-copy-compensation",
+    "title": "Funimation digital-copy library: ask Crunchyroll for compensation",
+    "company": "Crunchyroll (Sony)",
+    "category": "refund",
+    "summary": "When Funimation shut down on April 2, 2024, digital copies bundled with physical discs were deleted instead of migrating to Crunchyroll. Crunchyroll publicly promised to “make it up” to affected users and has handled compensation (discounts or replacement copies) case by case through support.",
+    "whoQualifies": "Former Funimation users who redeemed digital copies from physical Blu-ray/DVD purchases and lost access.",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "funimation_legacy",
+        "label": "Had a Funimation account"
+      },
+      {
+        "profileKey": "purchases",
+        "operator": "includes",
+        "value": "funimation_digital_copy",
+        "label": "Bought discs with a Funimation digital copy"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "non_cash",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "List of affected titles; disc receipts or photos of digital-code inserts; Funimation account email.",
+    "claimMethod": "in_app_request",
+    "sourceUrl": "https://help.crunchyroll.com/article/funimation-end-of-services",
+    "confidence": "plausible_unverified",
+    "confidenceNote": "The deletion and the public promise are documented (Crunchyroll help center). Whether support still grants compensation has NOT been re-verified; a human must confirm before this appears without the warning banner.",
+    "formTemplateId": "generic_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "gaming",
+      "steam",
+      "policy"
+    ],
+    "id": "steam-refund",
+    "title": "Steam refund: any game within 14 days and under 2 hours played",
+    "company": "Valve (Steam)",
+    "category": "refund",
+    "summary": "Steam refunds almost any purchase for any reason if you request it within 14 days of purchase and have played under two hours. DLC, in-game purchases and pre-orders have their own windows. Refunds go to your original payment method or Steam Wallet.",
+    "whoQualifies": "Anyone who bought a game on Steam in the last 14 days and has played it for less than two hours (extra rules for DLC, in-game items and pre-purchases).",
+    "eligibility": [
+      {
+        "profileKey": "services",
+        "operator": "includes",
+        "value": "steam",
+        "label": "Have a Steam account"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Nothing beyond your Steam login. Request from help.steampowered.com → Purchases.",
+    "claimMethod": "in_app_request",
+    "claimUrl": "https://help.steampowered.com/",
+    "sourceUrl": "https://store.steampowered.com/steam_refunds",
+    "confidence": "verified_current",
+    "confidenceNote": "Long-standing published Steam policy (store.steampowered.com/steam_refunds). Re-verify the page before launch.",
+    "formTemplateId": "refund_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "cosplay",
+      "etsy",
+      "policy"
+    ],
+    "id": "etsy-purchase-protection",
+    "title": "Etsy order never arrived or not as described: Purchase Protection refund",
+    "company": "Etsy",
+    "category": "refund",
+    "summary": "Etsy Purchase Protection refunds eligible orders that never arrive, arrive damaged, or are not as described, for items paid through Etsy checkout. Message the seller first; if it is not resolved you open a case from your order page within the case window.",
+    "whoQualifies": "Buyers who paid through Etsy checkout for a physical item (cosplay pieces, prints, wigs, commissions) that did not arrive or is not as described, within the case window.",
+    "eligibility": [
+      {
+        "profileKey": "shops",
+        "operator": "includes",
+        "value": "etsy",
+        "label": "Buy on Etsy"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Etsy order number, the shop conversation, photos if damaged or not as described.",
+    "claimMethod": "in_app_request",
+    "claimUrl": "https://www.etsy.com/your/purchases",
+    "sourceUrl": "https://www.etsy.com/legal/purchase-protection",
+    "confidence": "verified_current",
+    "confidenceNote": "Published Etsy Purchase Protection policy. Case windows and coverage caps change; re-verify before launch.",
+    "formTemplateId": "refund_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "tcg",
+      "figures",
+      "resale",
+      "policy"
+    ],
+    "id": "ebay-money-back-guarantee",
+    "title": "eBay / Mercari item not received or misgraded: Money Back Guarantee",
+    "company": "eBay (and Mercari purchase protection)",
+    "category": "refund",
+    "summary": "eBay Money Back Guarantee refunds the full price plus original shipping when an item does not arrive, arrives damaged, or is not as described (including misgraded or fake TCG cards and figures). Mercari has a similar purchase-protection window. Report the problem from your purchase within the guarantee window.",
+    "whoQualifies": "Buyers on eBay (or Mercari) whose item did not arrive or is not as described, reported within the platform's window.",
+    "eligibility": [
+      {
+        "profileKey": "shops",
+        "operator": "includes",
+        "value": "resale",
+        "label": "Buy on eBay or Mercari"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Order number, photos of the item and packaging, the listing description.",
+    "claimMethod": "in_app_request",
+    "claimUrl": "https://www.ebay.com/myb/Purchase",
+    "sourceUrl": "https://www.ebay.com/help/policies/ebay-money-back-guarantee-policy/ebay-money-back-guarantee-policy?id=4210",
+    "confidence": "verified_current",
+    "confidenceNote": "Published eBay Money Back Guarantee policy. Re-verify windows before launch.",
+    "formTemplateId": "refund_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "figures",
+      "amazon",
+      "policy"
+    ],
+    "id": "amazon-a-to-z-guarantee",
+    "title": "Third-party Amazon seller never shipped your figure: A-to-z Guarantee",
+    "company": "Amazon",
+    "category": "refund",
+    "summary": "If a third-party seller on Amazon does not deliver, delivers late, or the item is not as described and the seller does not fix it, you can request an A-to-z Guarantee refund from Your Orders after contacting the seller.",
+    "whoQualifies": "Amazon buyers of items sold by third-party sellers (most imported figures and merch) with a delivery or condition problem the seller did not resolve.",
+    "eligibility": [
+      {
+        "profileKey": "shops",
+        "operator": "includes",
+        "value": "amazon",
+        "label": "Buy on Amazon"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Order number and your message to the seller (Amazon requires you contact the seller first).",
+    "claimMethod": "in_app_request",
+    "claimUrl": "https://www.amazon.com/gp/css/order-history",
+    "sourceUrl": "https://www.amazon.com/help",
+    "confidence": "verified_current",
+    "confidenceNote": "Long-standing Amazon policy (search “A-to-z Guarantee” in Amazon Help). Re-verify the help URL before launch.",
+    "formTemplateId": "refund_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "figures",
+      "preorder",
+      "template"
+    ],
+    "id": "late-figure-preorder-refund",
+    "title": "Figure preorder 6+ months late or shop went silent",
+    "company": "Figure retailer (varies)",
+    "category": "refund",
+    "summary": "Scale figures routinely slip 6–18 months, and many shops treat closed preorders as final sale. When a paid preorder has no ship date or the shop stops responding, you can request cancellation citing the original release month, then dispute the charge with your card issuer as “goods not received” if the shop refuses.",
+    "whoQualifies": "Anyone who prepaid (fully or via deposit) for a figure or merch preorder that is more than 6 months past its listed release month, or whose shop has stopped responding. A refund equals what you paid.",
+    "eligibility": [
+      {
+        "profileKey": "conMishaps",
+        "operator": "includes",
+        "value": "late_figure_preorder",
+        "label": "Have a figure preorder that is 6+ months late"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Order confirmation showing the original release month, payment receipt, any shop emails about delays.",
+    "claimMethod": "email",
+    "extraFields": [
+      {
+        "key": "recipientName",
+        "label": "Shop name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "recipientEmail",
+        "label": "Shop support email",
+        "type": "email",
+        "required": true
+      },
+      {
+        "key": "releaseMonth",
+        "label": "Release month on the listing",
+        "type": "text",
+        "placeholder": "e.g. March 2026",
+        "required": true
+      }
+    ],
+    "sourceUrl": "https://help.goodsmileus.com/support/solutions/articles/72000527480-can-i-cancel-my-pre-order-",
+    "confidence": "verified_current",
+    "confidenceNote": "Template path, not a settlement: cancellation request plus card “goods not received” dispute. Card-network windows vary; the app never promises a refund.",
+    "formTemplateId": "refund_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "convention",
+      "cosplay",
+      "template"
+    ],
+    "id": "cancelled-con-badge-refund",
+    "title": "Cancelled or postponed convention: badge refund demand",
+    "company": "Convention organizer (varies) and your card issuer",
+    "category": "convention",
+    "summary": "Most cons say “no refunds”, but an event that never happened is a service not rendered. Send the organizer a written refund demand citing the cancellation announcement; if you paid by credit card and they refuse, a billing-error dispute under the Fair Credit Billing Act is available within 60 days of the statement (issuers often extend it for future-dated services). Debit and P2P payments have weaker protection.",
+    "whoQualifies": "Anyone who paid for a badge, VIP package or vendor table for an event that was cancelled or not delivered and has not been refunded. A refund equals the badge price.",
+    "eligibility": [
+      {
+        "profileKey": "conMishaps",
+        "operator": "includes",
+        "value": "cancelled_con_badge",
+        "label": "Paid for a con that was cancelled or postponed"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Order confirmation, the con's cancellation announcement (screenshot with date), any refund-denial email, the statement line showing the charge.",
+    "claimMethod": "email",
+    "extraFields": [
+      {
+        "key": "recipientName",
+        "label": "Convention / organizer name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "recipientEmail",
+        "label": "Organizer email",
+        "type": "email",
+        "required": true
+      }
+    ],
+    "sourceUrl": "https://consumer.ftc.gov/articles/what-do-if-youre-billed-things-you-never-got-or-you-get-unordered-products",
+    "confidence": "verified_current",
+    "confidenceNote": "Template path built on the FTC's billing-error guidance. Limited to genuine non-delivery (never “changed my mind” disputes).",
+    "formTemplateId": "con_refund_request"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "convention",
+      "cosplay",
+      "travel",
+      "template"
+    ],
+    "id": "lost-prop-bag-us",
+    "title": "Airline lost or damaged your prop, wig or armor bag (US flight)",
+    "company": "Your airline",
+    "category": "travel",
+    "summary": "Airlines are legally liable for checked baggage. On US domestic flights the DOT liability limit is $4,700 per passenger for provable loss (effective January 2025), and airlines owe reasonable reimbursement for essentials while a bag is delayed. A crushed foam armor set or a styled wig is a real declared loss if you have receipts, build-cost records or photos.",
+    "whoQualifies": "Passengers on a US domestic flight whose checked bag was lost, delayed or damaged. Report to the airline quickly (damage within 24 hours, delay within 21 days is typical) and file a written claim with an itemized list. Payout equals your provable loss, up to the cap.",
+    "eligibility": [
+      {
+        "profileKey": "conMishaps",
+        "operator": "includes",
+        "value": "lost_bag",
+        "label": "An airline lost, delayed or damaged your bag"
+      },
+      {
+        "profileKey": "country",
+        "operator": "in",
+        "value": [
+          "us"
+        ],
+        "label": "Live in the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 4700,
+    "payoutKind": "statutory_cap",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Property Irregularity Report number, baggage tag, itemized inventory with receipts or build-cost documentation, photos of the costume before travel and the damage after.",
+    "claimMethod": "email",
+    "extraFields": [
+      {
+        "key": "recipientName",
+        "label": "Airline",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "recipientEmail",
+        "label": "Airline baggage-claims email",
+        "type": "email",
+        "required": true
+      },
+      {
+        "key": "pirNumber",
+        "label": "Property Irregularity Report number",
+        "type": "text"
+      }
+    ],
+    "sourceUrl": "https://www.transportation.gov/lost-delayed-or-damaged-baggage",
+    "confidence": "verified_current",
+    "confidenceNote": "DOT domestic liability limit $4,700 (transportation.gov). The cap is a ceiling, not an award; the letter must not coach values upward.",
+    "formTemplateId": "travel_compensation"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "convention",
+      "cosplay",
+      "travel",
+      "template"
+    ],
+    "id": "lost-prop-bag-international",
+    "title": "Airline lost or damaged your prop or wig bag (international flight)",
+    "company": "Your airline",
+    "category": "travel",
+    "summary": "On international flights the Montreal Convention makes the airline liable for lost, delayed or damaged checked baggage up to 1,519 SDR (roughly $2,000). File a written claim with an itemized inventory within the convention's time limits (damage 7 days, delay 21 days).",
+    "whoQualifies": "Passengers on an international flight whose checked bag was lost, delayed or damaged. Payout equals your provable loss, up to the cap.",
+    "eligibility": [
+      {
+        "profileKey": "conMishaps",
+        "operator": "includes",
+        "value": "lost_bag",
+        "label": "An airline lost, delayed or damaged your bag"
+      },
+      {
+        "profileKey": "country",
+        "operator": "in",
+        "value": [
+          "uk",
+          "eu",
+          "ca",
+          "other"
+        ],
+        "label": "Live outside the United States"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 2000,
+    "payoutKind": "statutory_cap",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Property Irregularity Report number, baggage tag, itemized inventory with receipts, photos before and after.",
+    "claimMethod": "email",
+    "extraFields": [
+      {
+        "key": "recipientName",
+        "label": "Airline",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "recipientEmail",
+        "label": "Airline baggage-claims email",
+        "type": "email",
+        "required": true
+      },
+      {
+        "key": "pirNumber",
+        "label": "Property Irregularity Report number",
+        "type": "text"
+      }
+    ],
+    "sourceUrl": "https://www.iata.org/en/programs/passenger/baggage/",
+    "confidence": "verified_current",
+    "confidenceNote": "Montreal Convention baggage liability limit of 1,519 SDR (revised Dec 2024); USD equivalent is approximate.",
+    "formTemplateId": "travel_compensation"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "convention",
+      "travel",
+      "template"
+    ],
+    "id": "con-flight-refund-us",
+    "title": "Con flight cancelled or significantly changed: cash refund (US DOT rule)",
+    "company": "Your airline",
+    "category": "travel",
+    "summary": "Under the DOT automatic-refund rule, if the airline cancels or significantly changes a flight to, from or within the US and you decline the rebooking, you are owed a cash refund to your original payment method, not a voucher. Significantly delayed checked bags and paid extras that were not delivered are refundable too.",
+    "whoQualifies": "Anyone whose US-touching flight was cancelled or significantly changed and who did not accept alternate transport. The refund equals what you paid.",
+    "eligibility": [
+      {
+        "profileKey": "conMishaps",
+        "operator": "includes",
+        "value": "flight_delayed_or_cancelled",
+        "label": "A con flight was cancelled or delayed 3+ hours"
+      },
+      {
+        "profileKey": "country",
+        "operator": "in",
+        "value": [
+          "us",
+          "ca",
+          "other"
+        ],
+        "label": "Flying to, from or within the US"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Booking reference, flight number and date, the cancellation or change notice, proof of payment.",
+    "claimMethod": "email",
+    "extraFields": [
+      {
+        "key": "recipientName",
+        "label": "Airline",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "recipientEmail",
+        "label": "Airline customer-relations email",
+        "type": "email",
+        "required": true
+      }
+    ],
+    "sourceUrl": "https://www.transportation.gov/individuals/aviation-consumer-protection/refunds",
+    "confidence": "verified_current",
+    "confidenceNote": "DOT refund rule (transportation.gov/refunds). Refund equals the fare paid.",
+    "formTemplateId": "travel_compensation"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "convention",
+      "travel",
+      "template"
+    ],
+    "id": "con-flight-eu261",
+    "title": "Con flight delayed 3+ hours or cancelled: EU/UK 261 compensation",
+    "company": "Your airline",
+    "category": "travel",
+    "summary": "Flights departing an EU/UK airport (or arriving there on an EU/UK carrier) that land 3+ hours late, or are cancelled with under 14 days' notice, for reasons within the airline's control owe fixed compensation of €250–€600 per passenger on top of any refund.",
+    "whoQualifies": "Passengers on EU/UK-covered flights delayed 3+ hours at arrival or cancelled at short notice, where the cause was not extraordinary circumstances.",
+    "eligibility": [
+      {
+        "profileKey": "conMishaps",
+        "operator": "includes",
+        "value": "flight_delayed_or_cancelled",
+        "label": "A con flight was cancelled or delayed 3+ hours"
+      },
+      {
+        "profileKey": "country",
+        "operator": "in",
+        "value": [
+          "uk",
+          "eu"
+        ],
+        "label": "Live in the UK or EU"
+      }
+    ],
+    "estimatedPayoutMin": 270,
+    "estimatedPayoutMax": 650,
+    "payoutKind": "statutory_cap",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "Booking reference, flight number and date, boarding pass, the delay or cancellation notice.",
+    "claimMethod": "email",
+    "extraFields": [
+      {
+        "key": "recipientName",
+        "label": "Airline",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "recipientEmail",
+        "label": "Airline customer-relations email",
+        "type": "email",
+        "required": true
+      }
+    ],
+    "sourceUrl": "https://europa.eu/youreurope/citizens/travel/passenger-rights/air/index_en.htm",
+    "confidence": "verified_current",
+    "confidenceNote": "Regulation EC 261/2004 and the UK equivalent; USD figures are approximate conversions of €250–€600.",
+    "formTemplateId": "travel_compensation"
+  },
+  {
+    "updatedAt": "2026-09-17",
+    "verifiedBy": "",
+    "tags": [
+      "cosplay",
+      "commission",
+      "paypal",
+      "etsy",
+      "template"
+    ],
+    "id": "commission-never-delivered-dispute",
+    "title": "Cosplay, prop or art commission never arrived: PayPal or Etsy dispute",
+    "company": "PayPal Purchase Protection / Etsy Purchase Protection",
+    "category": "commission",
+    "summary": "Paid a commissioner and the piece never shipped before the con? PayPal Goods & Services: open an Item Not Received dispute within 180 days of payment and escalate to a claim within 20 days of opening it, or it closes automatically. Etsy checkout: open a case from the order once it is late. Friends & Family, Venmo, Cash App and Zelle payments are not covered.",
+    "whoQualifies": "Buyers who paid via PayPal Goods & Services within the last 180 days, or through Etsy checkout within the case window, for a physical item that was not delivered. The refund equals what you paid.",
+    "eligibility": [
+      {
+        "profileKey": "conMishaps",
+        "operator": "includes",
+        "value": "commission_undelivered",
+        "label": "Paid for a commission that never arrived"
+      }
+    ],
+    "estimatedPayoutMin": 0,
+    "estimatedPayoutMax": 0,
+    "payoutKind": "equals_paid",
+    "status": "open",
+    "deadline": "rolling",
+    "deadlineKind": "none",
+    "proofRequired": "PayPal transaction ID or Etsy order number, the commission agreement or DM thread showing the promised delivery date, any tracking the seller provided.",
+    "claimMethod": "in_app_request",
+    "extraFields": [
+      {
+        "key": "recipientName",
+        "label": "Commissioner / shop name",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "claimUrl": "https://www.paypal.com/disputes/",
+    "sourceUrl": "https://www.paypal.com/us/legalhub/paypal/buyer-protection",
+    "confidence": "verified_current",
+    "confidenceNote": "PayPal 180-day dispute / 20-day escalation rules (PayPal legal hub) and Etsy Purchase Protection. The generated notice goes to the seller first; the dispute itself is filed inside PayPal or Etsy.",
+    "formTemplateId": "commission_dispute"
+  }
+]

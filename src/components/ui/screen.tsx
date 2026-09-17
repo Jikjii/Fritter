@@ -13,7 +13,15 @@ export type ScreenProps = ScrollViewProps & {
 };
 
 /** Page container: safe-area aware, centered on wide screens, optional sticky footer. */
-export function Screen({ children, footer, noTopInset, scroll = true, contentContainerStyle, style, ...rest }: ScreenProps) {
+export function Screen({
+  children,
+  footer,
+  noTopInset,
+  scroll = true,
+  contentContainerStyle,
+  style,
+  ...rest
+}: ScreenProps) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const padTop = noTopInset ? 0 : insets.top;
@@ -33,7 +41,15 @@ export function Screen({ children, footer, noTopInset, scroll = true, contentCon
         <View style={[styles.scrollContent, contentContainerStyle]}>{content}</View>
       )}
       {footer ? (
-        <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, Spacing.three), borderTopColor: theme.border, backgroundColor: theme.background }]}>
+        <View
+          style={[
+            styles.footer,
+            {
+              paddingBottom: Math.max(insets.bottom, Spacing.three),
+              borderTopColor: theme.border,
+              backgroundColor: theme.background,
+            },
+          ]}>
           <View style={styles.footerInner}>{footer}</View>
         </View>
       ) : null}

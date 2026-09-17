@@ -12,6 +12,10 @@ function normalize(v: unknown): string {
   return String(v).trim().toLowerCase();
 }
 
+function asList(v: EligibilityRule['value']): string[] {
+  return (Array.isArray(v) ? v : [v]).map(normalize);
+}
+
 /** Evaluate a single rule. Returns null when the profile has no answer for the key. */
 export function evaluateRule(rule: EligibilityRule, profile: UserProfile): boolean | null {
   const raw: ProfileValue | undefined = profile[rule.profileKey];
@@ -20,16 +24,34 @@ export function evaluateRule(rule: EligibilityRule, profile: UserProfile): boole
 
   switch (rule.operator) {
     case 'equals': {
-      if (Array.isArray(raw)) return raw.length === 1 && normalize(raw[0]) === normalize(rule.value);
+      if (Array.isArray(rule.value))
+        return asList(rule.value).includes(normalize(Array.isArray(raw) ? raw[0] : raw));
+      if (Array.isArray(raw))
+        return raw.length === 1 && normalize(raw[0]) === normalize(rule.value);
       if (typeof raw === 'boolean' || typeof rule.value === 'boolean') {
         return Boolean(raw) === Boolean(rule.value);
       }
       return normalize(raw) === normalize(rule.value);
     }
+    case 'in': {
+      const wanted = asList(rule.value);
+      if (Array.isArray(raw)) return raw.some((item) => wanted.includes(normalize(item)));
+      return wanted.includes(normalize(raw));
+    }
     case 'includes': {
       const wanted = normalize(rule.value);
       if (Array.isArray(raw)) return raw.some((item) => normalize(item) === wanted);
       return normalize(raw) === wanted;
+    }
+    case 'includesAny': {
+      const wanted = asList(rule.value);
+      if (Array.isArray(raw)) return raw.some((item) => wanted.includes(normalize(item)));
+      return wanted.includes(normalize(raw));
+    }
+    case 'notIncludes': {
+      const wanted = normalize(rule.value);
+      if (Array.isArray(raw)) return !raw.some((item) => normalize(item) === wanted);
+      return normalize(raw) !== wanted;
     }
     case 'gte': {
       const n = Array.isArray(raw) ? raw.length : Number(raw);

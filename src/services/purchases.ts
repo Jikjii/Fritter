@@ -45,8 +45,22 @@ const ANDROID_KEY = process.env.EXPO_PUBLIC_RC_ANDROID_KEY;
 
 /** Default price points (USD). RevenueCat overrides these with store prices at runtime. */
 export const DEFAULT_PLANS: Plan[] = [
-  { id: 'yearly', priceString: '$29.99', price: 29.99, currencyCode: 'USD', trialDays: 3, packageRef: 'mock_yearly' },
-  { id: 'weekly', priceString: '$4.99', price: 4.99, currencyCode: 'USD', trialDays: 0, packageRef: 'mock_weekly' },
+  {
+    id: 'yearly',
+    priceString: '$29.99',
+    price: 29.99,
+    currencyCode: 'USD',
+    trialDays: 3,
+    packageRef: 'mock_yearly',
+  },
+  {
+    id: 'weekly',
+    priceString: '$4.99',
+    price: 4.99,
+    currencyCode: 'USD',
+    trialDays: 0,
+    packageRef: 'mock_weekly',
+  },
 ];
 
 class MockPurchases implements Purchases {
@@ -97,13 +111,14 @@ class RevenueCatPurchases implements Purchases {
       priceString: pkg.product.priceString,
       price: pkg.product.price,
       currencyCode: pkg.product.currencyCode,
-      trialDays: pkg.product.introPrice?.periodNumberOfUnits && pkg.product.introPrice.price === 0
-        ? pkg.product.introPrice.periodUnit === 'DAY'
-          ? pkg.product.introPrice.periodNumberOfUnits
-          : pkg.product.introPrice.periodUnit === 'WEEK'
-            ? pkg.product.introPrice.periodNumberOfUnits * 7
-            : 0
-        : 0,
+      trialDays:
+        pkg.product.introPrice?.periodNumberOfUnits && pkg.product.introPrice.price === 0
+          ? pkg.product.introPrice.periodUnit === 'DAY'
+            ? pkg.product.introPrice.periodNumberOfUnits
+            : pkg.product.introPrice.periodUnit === 'WEEK'
+              ? pkg.product.introPrice.periodNumberOfUnits * 7
+              : 0
+          : 0,
       packageRef: pkg,
     });
     if (current.annual) plans.push(toPlan(current.annual, 'yearly'));
@@ -142,7 +157,8 @@ class RevenueCatPurchases implements Purchases {
   }
 }
 
-const hasNativeKeys = Platform.OS !== 'web' && Boolean(Platform.OS === 'ios' ? IOS_KEY : ANDROID_KEY);
+const hasNativeKeys =
+  Platform.OS !== 'web' && Boolean(Platform.OS === 'ios' ? IOS_KEY : ANDROID_KEY);
 
 export const purchases: Purchases = hasNativeKeys ? new RevenueCatPurchases() : new MockPurchases();
 export const isMockPurchases = !hasNativeKeys;

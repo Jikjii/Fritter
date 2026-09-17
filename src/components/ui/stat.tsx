@@ -4,7 +4,15 @@ import { ThemedText } from '@/components/themed-text';
 import { Spacing, type ThemeColor } from '@/constants/theme';
 
 /** Label-over-value stat used in wallet summaries and social-proof rows. */
-export function Stat({ label, value, color = 'text' }: { label: string; value: string; color?: ThemeColor }) {
+export function Stat({
+  label,
+  value,
+  color = 'text',
+}: {
+  label: string;
+  value: string;
+  color?: ThemeColor;
+}) {
   return (
     <View style={styles.stat}>
       <ThemedText type="subtitle" themeColor={color}>

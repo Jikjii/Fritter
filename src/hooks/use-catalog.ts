@@ -1,11 +1,20 @@
 import { useMemo } from 'react';
 
 import { rankOpportunities } from '@/domain/eligibility';
-import { estimateOwed, isPastDeadline } from '@/domain/estimate';
-import type { EligibilityResult, Opportunity, OpportunityCategory, OwedEstimate } from '@/domain/types';
+import { estimateOwed, isClosed, isSummable, isWatching } from '@/domain/estimate';
+import type {
+  EligibilityResult,
+  Opportunity,
+  OpportunityCategory,
+  OwedEstimate,
+} from '@/domain/types';
 import { useAppStore } from '@/store/use-app-store';
 
-export type RankedOpportunity = { opportunity: Opportunity; eligibility: EligibilityResult; closed: boolean };
+export type RankedOpportunity = {
+  opportunity: Opportunity;
+  eligibility: EligibilityResult;
+  closed: boolean;
+};
 
 /**
  * Ranked catalog + owed estimate for the current profile. Memoized on catalog/profile identity so
@@ -22,11 +31,14 @@ export function useCatalog(filter?: OpportunityCategory | 'all'): {
   return useMemo(() => {
     const ranked = rankOpportunities(catalog, profile).map((r) => ({
       ...r,
-      closed: r.opportunity.confidence === 'verified_past' || isPastDeadline(r.opportunity.deadline),
+      closed: isClosed(r.opportunity),
     }));
-    const filtered = filter && filter !== 'all' ? ranked.filter((r) => r.opportunity.category === filter) : ranked;
-    // Open items first, closed at the bottom regardless of eligibility.
-    filtered.sort((a, b) => Number(a.closed) - Number(b.closed));
+    const filtered =
+      filter && filter !== 'all' ? ranked.filter((r) => r.opportunity.category === filter) : ranked;
+    // Money first: paying/automatic > refunds & rights > watchlist > closed, then eligibility rank (stable).
+    const lane = (r: RankedOpportunity) =>
+      r.closed ? 3 : isWatching(r.opportunity) ? 2 : isSummable(r.opportunity) ? 0 : 1;
+    filtered.sort((a, b) => lane(a) - lane(b));
     return {
       ranked: filtered,
       estimate: estimateOwed(catalog, profile),

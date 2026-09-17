@@ -14,7 +14,12 @@ export function Card({ style, tone = 'element', ...rest }: CardProps) {
     accent: theme.accentSoft,
     gold: theme.goldSoft,
   }[tone];
-  return <View style={[styles.card, { backgroundColor: bg, borderColor: theme.border }, style]} {...rest} />;
+  return (
+    <View
+      style={[styles.card, { backgroundColor: bg, borderColor: theme.border }, style]}
+      {...rest}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

@@ -11,6 +11,7 @@ const base: Opportunity = {
   eligibility: [],
   estimatedPayoutMin: 10,
   estimatedPayoutMax: 50,
+  payoutKind: 'cash',
   deadline: 'rolling',
   proofRequired: '',
   claimMethod: 'online_form',
@@ -30,30 +31,52 @@ describe('evaluateRule', () => {
   };
 
   it('includes matches array items case-insensitively', () => {
-    expect(evaluateRule({ profileKey: 'services', operator: 'includes', value: 'crunchyroll' }, profile)).toBe(true);
-    expect(evaluateRule({ profileKey: 'services', operator: 'includes', value: 'netflix' }, profile)).toBe(false);
+    expect(
+      evaluateRule({ profileKey: 'services', operator: 'includes', value: 'crunchyroll' }, profile)
+    ).toBe(true);
+    expect(
+      evaluateRule({ profileKey: 'services', operator: 'includes', value: 'netflix' }, profile)
+    ).toBe(false);
   });
 
   it('equals compares strings and booleans', () => {
-    expect(evaluateRule({ profileKey: 'country', operator: 'equals', value: 'us' }, profile)).toBe(true);
-    expect(evaluateRule({ profileKey: 'cosplays', operator: 'equals', value: true }, profile)).toBe(true);
-    expect(evaluateRule({ profileKey: 'cosplays', operator: 'equals', value: false }, profile)).toBe(false);
+    expect(evaluateRule({ profileKey: 'country', operator: 'equals', value: 'us' }, profile)).toBe(
+      true
+    );
+    expect(evaluateRule({ profileKey: 'cosplays', operator: 'equals', value: true }, profile)).toBe(
+      true
+    );
+    expect(
+      evaluateRule({ profileKey: 'cosplays', operator: 'equals', value: false }, profile)
+    ).toBe(false);
   });
 
   it('gte/lte handle numbers and array lengths', () => {
-    expect(evaluateRule({ profileKey: 'consPerYear', operator: 'gte', value: 2 }, profile)).toBe(true);
-    expect(evaluateRule({ profileKey: 'consPerYear', operator: 'lte', value: 2 }, profile)).toBe(false);
+    expect(evaluateRule({ profileKey: 'consPerYear', operator: 'gte', value: 2 }, profile)).toBe(
+      true
+    );
+    expect(evaluateRule({ profileKey: 'consPerYear', operator: 'lte', value: 2 }, profile)).toBe(
+      false
+    );
     expect(evaluateRule({ profileKey: 'services', operator: 'gte', value: 2 }, profile)).toBe(true);
   });
 
   it('truthy treats "none"/"no" as false', () => {
-    expect(evaluateRule({ profileKey: 'spendTier', operator: 'truthy', value: true }, profile)).toBe(false);
-    expect(evaluateRule({ profileKey: 'cosplays', operator: 'truthy', value: true }, profile)).toBe(true);
+    expect(
+      evaluateRule({ profileKey: 'spendTier', operator: 'truthy', value: true }, profile)
+    ).toBe(false);
+    expect(evaluateRule({ profileKey: 'cosplays', operator: 'truthy', value: true }, profile)).toBe(
+      true
+    );
   });
 
   it('returns null for unanswered keys', () => {
-    expect(evaluateRule({ profileKey: 'missing', operator: 'equals', value: 'x' }, profile)).toBeNull();
-    expect(evaluateRule({ profileKey: 'empty', operator: 'includes', value: 'x' }, { empty: [] })).toBeNull();
+    expect(
+      evaluateRule({ profileKey: 'missing', operator: 'equals', value: 'x' }, profile)
+    ).toBeNull();
+    expect(
+      evaluateRule({ profileKey: 'empty', operator: 'includes', value: 'x' }, { empty: [] })
+    ).toBeNull();
   });
 });
 
@@ -91,11 +114,33 @@ describe('evaluateEligibility', () => {
 
 describe('rankOpportunities', () => {
   it('puts likely first, then possible, then unknown, then unlikely; ties by max payout', () => {
-    const likelyBig = { ...base, id: 'a', estimatedPayoutMax: 500, eligibility: [{ profileKey: 'country', operator: 'equals', value: 'US' }] } as Opportunity;
-    const likelySmall = { ...base, id: 'b', estimatedPayoutMax: 20, eligibility: [{ profileKey: 'country', operator: 'equals', value: 'US' }] } as Opportunity;
-    const unlikely = { ...base, id: 'c', estimatedPayoutMax: 9999, eligibility: [{ profileKey: 'country', operator: 'equals', value: 'JP' }] } as Opportunity;
-    const unknown = { ...base, id: 'd', estimatedPayoutMax: 100, eligibility: [{ profileKey: 'nope', operator: 'equals', value: 'x' }] } as Opportunity;
-    const ranked = rankOpportunities([unlikely, likelySmall, unknown, likelyBig], { country: 'US' });
+    const likelyBig = {
+      ...base,
+      id: 'a',
+      estimatedPayoutMax: 500,
+      eligibility: [{ profileKey: 'country', operator: 'equals', value: 'US' }],
+    } as Opportunity;
+    const likelySmall = {
+      ...base,
+      id: 'b',
+      estimatedPayoutMax: 20,
+      eligibility: [{ profileKey: 'country', operator: 'equals', value: 'US' }],
+    } as Opportunity;
+    const unlikely = {
+      ...base,
+      id: 'c',
+      estimatedPayoutMax: 9999,
+      eligibility: [{ profileKey: 'country', operator: 'equals', value: 'JP' }],
+    } as Opportunity;
+    const unknown = {
+      ...base,
+      id: 'd',
+      estimatedPayoutMax: 100,
+      eligibility: [{ profileKey: 'nope', operator: 'equals', value: 'x' }],
+    } as Opportunity;
+    const ranked = rankOpportunities([unlikely, likelySmall, unknown, likelyBig], {
+      country: 'US',
+    });
     expect(ranked.map((r) => r.opportunity.id)).toEqual(['a', 'b', 'd', 'c']);
   });
 });

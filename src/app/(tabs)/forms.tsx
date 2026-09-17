@@ -21,7 +21,8 @@ export default function FormsScreen() {
         <Card>
           <ThemedText type="heading">No forms yet</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
-            Open a payout and tap “Prepare my claim”. Fritter fills in the form and prepares a PDF you can send.
+            Open a payout and tap “Prepare my claim”. Fritter fills in the form and prepares a PDF
+            you can send.
           </ThemedText>
           <Link href="/(tabs)" asChild>
             <Button title="Browse payouts" size="md" />
@@ -31,19 +32,26 @@ export default function FormsScreen() {
         forms.map((f) => {
           const o = catalog.find((x) => x.id === f.opportunityId);
           return (
-            <Pressable key={f.id} onPress={() => router.push({ pathname: '/form/[id]', params: { id: f.id } })} accessibilityRole="button">
+            <Pressable
+              key={f.id}
+              onPress={() => router.push({ pathname: '/form/[id]', params: { id: f.id } })}
+              accessibilityRole="button">
               <Card>
                 <View style={styles.rowBetween}>
                   <ThemedText type="caption" themeColor="textSecondary">
                     {f.createdAt.slice(0, 10)}
                   </ThemedText>
-                  <Badge label={f.fileUri ? 'PDF ready' : 'Draft'} color={f.fileUri ? 'money' : 'primary'} />
+                  <Badge
+                    label={f.fileUri ? 'PDF ready' : 'Draft'}
+                    color={f.fileUri ? 'money' : 'primary'}
+                  />
                 </View>
                 <ThemedText type="heading" numberOfLines={2}>
                   {f.title}
                 </ThemedText>
                 <ThemedText type="small" themeColor="textSecondary">
-                  {o?.company ?? 'Unknown company'} · {Object.values(f.fields).filter(Boolean).length} fields
+                  {o?.company ?? 'Unknown company'} ·{' '}
+                  {Object.values(f.fields).filter(Boolean).length} fields
                 </ThemedText>
               </Card>
             </Pressable>

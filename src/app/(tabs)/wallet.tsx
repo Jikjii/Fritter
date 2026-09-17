@@ -45,7 +45,11 @@ function ClaimRow({ claim }: { claim: Claim }) {
 
   const move = (to: ClaimStatus) => {
     if (updateClaimStatus(claim.id, to)) {
-      analytics.track(Events.claimStatusChanged, { from: claim.status, to, opportunityId: claim.opportunityId });
+      analytics.track(Events.claimStatusChanged, {
+        from: claim.status,
+        to,
+        opportunityId: claim.opportunityId,
+      });
       if (to === 'paid' || to === 'rejected' || to === 'expired') cancelReminder(claim.reminderId);
     }
   };
@@ -64,7 +68,11 @@ function ClaimRow({ claim }: { claim: Claim }) {
 
   return (
     <Card style={styles.claimCard}>
-      <Pressable onPress={() => router.push({ pathname: '/opportunity/[id]', params: { id: opportunity.id } })} accessibilityRole="button">
+      <Pressable
+        onPress={() =>
+          router.push({ pathname: '/opportunity/[id]', params: { id: opportunity.id } })
+        }
+        accessibilityRole="button">
         <View style={styles.rowBetween}>
           <Badge label={cat.label} emoji={cat.emoji} color={cat.color} />
           <Badge label={CLAIM_STATUS_LABEL[claim.status]} color={STATUS_COLOR[claim.status]} />
@@ -74,7 +82,9 @@ function ClaimRow({ claim }: { claim: Claim }) {
         </ThemedText>
         <View style={styles.rowBetween}>
           <ThemedText type="subtitle" themeColor="money">
-            {claim.status === 'paid' ? formatMoney(claim.paidAmount ?? claim.estimatedPayout) : `~${formatMoney(claim.estimatedPayout)}`}
+            {claim.status === 'paid'
+              ? formatMoney(claim.paidAmount ?? claim.estimatedPayout)
+              : `~${formatMoney(claim.estimatedPayout)}`}
           </ThemedText>
           <ThemedText type="caption" themeColor={closed ? 'danger' : 'textSecondary'}>
             {deadlineLabel(opportunity.deadline, closed)}
@@ -95,9 +105,22 @@ function ClaimRow({ claim }: { claim: Claim }) {
           />
         ) : null}
         {next.map((to) => (
-          <Button key={to} title={ACTION_LABEL[to] ?? CLAIM_STATUS_LABEL[to]} variant="secondary" size="md" style={styles.actionBtn} onPress={() => move(to)} />
+          <Button
+            key={to}
+            title={ACTION_LABEL[to] ?? CLAIM_STATUS_LABEL[to]}
+            variant="secondary"
+            size="md"
+            style={styles.actionBtn}
+            onPress={() => move(to)}
+          />
         ))}
-        <Button title="Remove" variant="ghost" size="md" style={styles.actionBtn} onPress={remove} />
+        <Button
+          title="Remove"
+          variant="ghost"
+          size="md"
+          style={styles.actionBtn}
+          onPress={remove}
+        />
       </View>
     </Card>
   );
@@ -110,11 +133,17 @@ export default function WalletScreen() {
 
   const growth = useMemo(() => {
     const sorted = [...claims].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-    const points = sorted.reduce<number[]>((acc, c) => [...acc, acc[acc.length - 1] + c.estimatedPayout], [0]);
+    const points = sorted.reduce<number[]>(
+      (acc, c) => [...acc, acc[acc.length - 1] + c.estimatedPayout],
+      [0]
+    );
     return points.length >= 2 ? points : [0, 0];
   }, [claims]);
 
-  const sortedClaims = useMemo(() => [...claims].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)), [claims]);
+  const sortedClaims = useMemo(
+    () => [...claims].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
+    [claims]
+  );
 
   return (
     <Screen>
@@ -132,7 +161,13 @@ export default function WalletScreen() {
           <Stat label="Paid out" value={formatMoney(summary.paid)} color="money" />
           <Stat label="Claims" value={String(claims.length)} />
         </View>
-        {claims.length >= 2 ? <GrowthLine points={growth} height={90} endLabel={formatMoney(growth[growth.length - 1], { compact: true })} /> : null}
+        {claims.length >= 2 ? (
+          <GrowthLine
+            points={growth}
+            height={90}
+            endLabel={formatMoney(growth[growth.length - 1], { compact: true })}
+          />
+        ) : null}
       </Card>
 
       {claims.length === 0 ? (
@@ -157,7 +192,13 @@ export default function WalletScreen() {
 const styles = StyleSheet.create({
   stats: { flexDirection: 'row', gap: Spacing.two, marginTop: Spacing.two },
   claimCard: { gap: Spacing.two },
-  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.two, flexWrap: 'wrap' },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: Spacing.two,
+    flexWrap: 'wrap',
+  },
   title: { marginVertical: Spacing.one },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
   actionBtn: { alignSelf: 'auto', flexGrow: 1 },

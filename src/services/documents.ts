@@ -21,6 +21,10 @@ export async function shareFormPdf(uri: string, title: string): Promise<boolean>
   if (Platform.OS === 'web') return false;
   const Sharing = require('expo-sharing') as typeof import('expo-sharing');
   if (!(await Sharing.isAvailableAsync())) return false;
-  await Sharing.shareAsync(uri, { mimeType: 'application/pdf', dialogTitle: title, UTI: 'com.adobe.pdf' });
+  await Sharing.shareAsync(uri, {
+    mimeType: 'application/pdf',
+    dialogTitle: title,
+    UTI: 'com.adobe.pdf',
+  });
   return true;
 }

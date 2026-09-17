@@ -91,5 +91,4 @@ export const CategoryStyle = {
   convention: { color: 'accent', emoji: '🎟️', label: 'Conventions' },
   travel: { color: 'gold', emoji: '✈️', label: 'Travel' },
   commission: { color: 'warning', emoji: '🧵', label: 'Commissions' },
-  rewards: { color: 'primary', emoji: '🎁', label: 'Rewards' },
 } as const satisfies Record<string, { color: ThemeColor; emoji: string; label: string }>;

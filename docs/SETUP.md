@@ -45,8 +45,14 @@ The app ships with `src/content/catalog.json`. To update the feed without a rele
 array with the same shape (see `docs/DATA_MODEL.md`) at any HTTPS URL and set
 `EXPO_PUBLIC_CATALOG_URL`. Remote items replace bundled items by `id`.
 
-**Before launch:** every item must be `verified_current` or `verified_past`. Run
-`npm run catalog:validate`; it lists anything unverified.
+**Before launch:** every item must be `verified_current` or `verified_past`, human-checked against
+the official page, with `verifiedBy` and a fresh `updatedAt` (items older than 60 days hide their
+amounts). Run `npm run catalog:validate`; it lists anything unverified and rejects any rule that
+points at a `profileKey` or option value the onboarding does not set. Set `hidden: true` in the
+remote feed to pull an item instantly.
+
+Set `EXPO_PUBLIC_SUPPORT_EMAIL` so the "Report a wrong deadline or amount" link on every detail
+screen reaches you.
 
 ## Notifications
 

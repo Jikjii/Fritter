@@ -20,7 +20,13 @@ export type GrowthLineProps = {
  * Smooth "line going up" chart for the scientific-feel onboarding screens (e.g. "money found by
  * fans like you over time") and the Wallet history.
  */
-export function GrowthLine({ points, labels, height = 140, endLabel, color = 'money' }: GrowthLineProps) {
+export function GrowthLine({
+  points,
+  labels,
+  height = 140,
+  endLabel,
+  color = 'money',
+}: GrowthLineProps) {
   const theme = useTheme();
   const stroke = theme[color];
   const width = 320;
@@ -31,7 +37,9 @@ export function GrowthLine({ points, labels, height = 140, endLabel, color = 'mo
     const max = Math.max(...points, 1);
     const min = Math.min(...points, 0);
     const xs = points.map((_, i) => pad + (i * (width - pad * 2)) / (points.length - 1));
-    const ys = points.map((p) => height - pad - ((p - min) / (max - min || 1)) * (height - pad * 2));
+    const ys = points.map(
+      (p) => height - pad - ((p - min) / (max - min || 1)) * (height - pad * 2)
+    );
     let d = `M ${xs[0]} ${ys[0]}`;
     for (let i = 1; i < points.length; i++) {
       const cx = (xs[i - 1] + xs[i]) / 2;
@@ -43,7 +51,11 @@ export function GrowthLine({ points, labels, height = 140, endLabel, color = 'mo
 
   return (
     <View style={styles.wrap}>
-      <Svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+      <Svg
+        width="100%"
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        preserveAspectRatio="none">
         <Defs>
           <LinearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
             <Stop offset="0" stopColor={stroke} stopOpacity={0.35} />
@@ -51,8 +63,19 @@ export function GrowthLine({ points, labels, height = 140, endLabel, color = 'mo
           </LinearGradient>
         </Defs>
         {area ? <Path d={area} fill="url(#fill)" /> : null}
-        {path ? <Path d={path} stroke={stroke} strokeWidth={3} fill="none" strokeLinecap="round" /> : null}
-        {path ? <Circle cx={last.x} cy={last.y} r={6} fill={stroke} stroke={theme.background} strokeWidth={3} /> : null}
+        {path ? (
+          <Path d={path} stroke={stroke} strokeWidth={3} fill="none" strokeLinecap="round" />
+        ) : null}
+        {path ? (
+          <Circle
+            cx={last.x}
+            cy={last.y}
+            r={6}
+            fill={stroke}
+            stroke={theme.background}
+            strokeWidth={3}
+          />
+        ) : null}
       </Svg>
       {endLabel ? (
         <ThemedText type="smallBold" style={[styles.endLabel, { color: stroke }]}>

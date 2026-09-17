@@ -10,9 +10,17 @@ import { useTheme } from '@/hooks/use-theme';
  * Horizontal bars of estimated money by category. Pure React Native views (no SVG) so it renders
  * identically on iOS, Android, web and in tests. Used on the onboarding reveal and Wallet.
  */
-export function CategoryBars({ byCategory, max }: { byCategory: Record<OpportunityCategory, number>; max?: number }) {
+export function CategoryBars({
+  byCategory,
+  max,
+}: {
+  byCategory: Record<OpportunityCategory, number>;
+  max?: number;
+}) {
   const theme = useTheme();
-  const entries = OPPORTUNITY_CATEGORIES.map((c) => ({ c, v: byCategory[c] ?? 0 })).filter((e) => e.v > 0);
+  const entries = OPPORTUNITY_CATEGORIES.map((c) => ({ c, v: byCategory[c] ?? 0 })).filter(
+    (e) => e.v > 0
+  );
   const top = max ?? Math.max(1, ...entries.map((e) => e.v));
   if (entries.length === 0) {
     return (
@@ -31,7 +39,12 @@ export function CategoryBars({ byCategory, max }: { byCategory: Record<Opportuni
               {s.emoji} {s.label}
             </ThemedText>
             <View style={[styles.track, { backgroundColor: theme.backgroundSelected }]}>
-              <View style={[styles.fill, { width: `${Math.max(4, (v / top) * 100)}%`, backgroundColor: theme[s.color] }]} />
+              <View
+                style={[
+                  styles.fill,
+                  { width: `${Math.max(4, (v / top) * 100)}%`, backgroundColor: theme[s.color] },
+                ]}
+              />
             </View>
             <ThemedText type="smallBold" style={styles.value}>
               {formatMoney(v, { compact: true })}

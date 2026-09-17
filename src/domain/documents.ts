@@ -36,7 +36,11 @@ export const TEMPLATE_FIELDS: Record<FormTemplateId, FormFieldSpec[]> = {
     { key: 'eventName', label: 'Convention name', type: 'text', required: true },
     { key: 'orderNumber', label: 'Badge / ticket order number', type: 'text', required: true },
     { key: 'amountPaid', label: 'Amount paid (USD)', type: 'number', required: true },
-    { key: 'reason', label: 'Reason (cancelled, rescheduled, unable to attend)', type: 'multiline' },
+    {
+      key: 'reason',
+      label: 'Reason (cancelled, rescheduled, unable to attend)',
+      type: 'multiline',
+    },
   ],
   travel_compensation: [
     { key: 'carrier', label: 'Airline / carrier', type: 'text', required: true },
@@ -49,7 +53,11 @@ export const TEMPLATE_FIELDS: Record<FormTemplateId, FormFieldSpec[]> = {
       options: ['Delayed 3+ hours', 'Cancelled', 'Lost or damaged baggage', 'Denied boarding'],
       required: true,
     },
-    { key: 'details', label: 'Details (props, wigs, costume pieces affected, etc.)', type: 'multiline' },
+    {
+      key: 'details',
+      label: 'Details (props, wigs, costume pieces affected, etc.)',
+      type: 'multiline',
+    },
   ],
   commission_dispute: [
     { key: 'sellerName', label: 'Commissioner / shop name', type: 'text', required: true },
@@ -70,7 +78,10 @@ export function fieldsForOpportunity(o: Opportunity): FormFieldSpec[] {
 }
 
 /** Pre-fill form values from the profile. Only string values are copied. */
-export function prefillFromProfile(fields: FormFieldSpec[], profile: UserProfile): Record<string, string> {
+export function prefillFromProfile(
+  fields: FormFieldSpec[],
+  profile: UserProfile
+): Record<string, string> {
   const out: Record<string, string> = {};
   for (const f of fields) {
     const v = profile[f.key];
@@ -80,7 +91,10 @@ export function prefillFromProfile(fields: FormFieldSpec[], profile: UserProfile
   return out;
 }
 
-export function missingRequiredFields(fields: FormFieldSpec[], values: Record<string, string>): FormFieldSpec[] {
+export function missingRequiredFields(
+  fields: FormFieldSpec[],
+  values: Record<string, string>
+): FormFieldSpec[] {
   return fields.filter((f) => f.required && !(values[f.key] ?? '').trim());
 }
 
@@ -142,19 +156,33 @@ ${v.reference ? `<p>Reference: ${esc(v.reference)}</p>` : ''}
 }
 
 /** Render a print-ready HTML document for the claim. Pure: safe to unit test. */
-export function renderFormHtml(o: Opportunity, values: Record<string, string>, createdAt: string): string {
+export function renderFormHtml(
+  o: Opportunity,
+  values: Record<string, string>,
+  createdAt: string
+): string {
   const v = values;
   const name = `${v.firstName ?? ''} ${v.lastName ?? ''}`.trim();
-  const address = [v.addressLine1, v.addressLine2, `${v.city ?? ''}, ${v.state ?? ''} ${v.postalCode ?? ''}`.trim(), v.country]
+  const address = [
+    v.addressLine1,
+    v.addressLine2,
+    `${v.city ?? ''}, ${v.state ?? ''} ${v.postalCode ?? ''}`.trim(),
+    v.country,
+  ]
     .filter((line) => line && line.trim() && line.trim() !== ',')
     .map((line) => esc(line as string))
     .join('<br/>');
   const date = createdAt.slice(0, 10);
-  const recipient = o.mailingAddress
-    ? `<p><strong>To:</strong><br/>${esc(o.mailingAddress).replace(/\n/g, '<br/>')}</p>`
-    : o.claimEmail
-      ? `<p><strong>To:</strong> ${esc(o.claimEmail)}</p>`
-      : '';
+  const recipientAddress = o.mailingAddress || v.recipientAddress || '';
+  const recipientEmail = o.claimEmail || v.recipientEmail || '';
+  const recipientName = v.recipientName || '';
+  const recipient = recipientAddress
+    ? `<p><strong>To:</strong><br/>${recipientName ? `${esc(recipientName)}<br/>` : ''}${esc(recipientAddress).replace(/\n/g, '<br/>')}</p>`
+    : recipientEmail
+      ? `<p><strong>To:</strong> ${recipientName ? `${esc(recipientName)} — ` : ''}${esc(recipientEmail)}</p>`
+      : recipientName
+        ? `<p><strong>To:</strong> ${esc(recipientName)}</p>`
+        : '';
 
   return `<!doctype html>
 <html><head><meta charset="utf-8"/><title>${esc(formTitle(o))}</title>

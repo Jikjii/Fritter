@@ -11,8 +11,7 @@ export type OpportunityCategory =
   | 'refund' // refund & credit programs (digital library migrations, cancelled preorders, price drops)
   | 'convention' // con badge / event refunds and transfers
   | 'travel' // flight / hotel compensation for con trips (delays, cancellations, lost props)
-  | 'commission' // undelivered cosplay commission disputes and chargebacks
-  | 'rewards'; // forgotten loyalty credits, unclaimed rewards, store credit
+  | 'commission'; // undelivered cosplay commission disputes and chargebacks
 
 export const OPPORTUNITY_CATEGORIES: OpportunityCategory[] = [
   'settlement',
@@ -20,8 +19,24 @@ export const OPPORTUNITY_CATEGORIES: OpportunityCategory[] = [
   'convention',
   'travel',
   'commission',
-  'rewards',
 ];
+
+/**
+ * What the money actually is. Only `cash` and `credit` are ever summed into the
+ * "you may be owed" headline; everything else is counted but shown per item.
+ */
+export type PayoutKind =
+  | 'cash' // settlement check, refund to card, PayPal
+  | 'credit' // store / platform credit
+  | 'equals_paid' // you get back what you paid (refund programs, chargebacks)
+  | 'statutory_cap' // a legal maximum (airline baggage liability, EU261) — not a typical payout
+  | 'non_cash'; // free repair, replacement
+
+/**
+ * `watching` = a lawsuit or investigation with NO claims process yet. Renders "$0 today"
+ * and an "Alert me" toggle; never summed. `closed` = claim window over (kept as history).
+ */
+export type OpportunityStatus = 'open' | 'watching' | 'closed';
 
 export type ClaimMethod = 'online_form' | 'mail_form' | 'email' | 'in_app_request' | 'automatic';
 
@@ -35,14 +50,22 @@ export type Confidence =
   | 'plausible_unverified' // likely real, not yet confirmed by a human
   | 'illustrative'; // example content — must be replaced or verified before launch
 
-export type RuleOperator = 'equals' | 'includes' | 'gte' | 'lte' | 'truthy';
+export type RuleOperator =
+  | 'equals' // profile value equals `value`
+  | 'in' // profile value is one of `value[]`
+  | 'includes' // profile array contains `value`
+  | 'includesAny' // profile array contains at least one of `value[]`
+  | 'notIncludes' // profile array does not contain `value`
+  | 'gte'
+  | 'lte'
+  | 'truthy';
 
 /** One eligibility requirement, evaluated against the user's profile. */
 export interface EligibilityRule {
   /** A key on UserProfile that an onboarding question sets, e.g. "services". */
   profileKey: string;
   operator: RuleOperator;
-  value: string | number | boolean;
+  value: string | number | boolean | string[];
   /** Human-readable requirement shown in the checklist, e.g. "Had a Crunchyroll account". */
   label?: string;
 }
@@ -81,16 +104,28 @@ export interface Opportunity {
   eligibility: EligibilityRule[];
   estimatedPayoutMin: number;
   estimatedPayoutMax: number;
+  payoutKind: PayoutKind;
+  /** Defaults to "open". */
+  status?: OpportunityStatus;
   /** ISO date (YYYY-MM-DD), or "rolling" (no deadline), or "unknown". */
   deadline: string;
+  /**
+   * What the deadline is. Only `claim_deadline` drives the "closes in N days" reminder;
+   * a `hearing` date is informational (e.g. a fairness hearing before automatic credits).
+   */
+  deadlineKind?: 'claim_deadline' | 'hearing' | 'none';
   proofRequired: string;
   claimMethod: ClaimMethod;
   sourceUrl?: string;
   confidence: Confidence;
   confidenceNote: string;
   formTemplateId: FormTemplateId;
-  /** ISO date the entry was last reviewed by a human. */
+  /** ISO date the entry was last reviewed. Entries older than VERIFICATION_TTL_DAYS stop showing amounts. */
   updatedAt: string;
+  /** Initials / handle of the human who verified the entry. Empty = AI-researched only. */
+  verifiedBy?: string;
+  /** Kill switch: hidden items never render, even if cached. */
+  hidden?: boolean;
   tags?: string[];
   extraFields?: FormFieldSpec[];
   /** Postal address for mail-in claims. */
@@ -162,6 +197,8 @@ export interface GeneratedForm {
   /** Rendered HTML (what expo-print turns into a PDF). */
   html: string;
   createdAt: string;
+  /** When the user ticked the truthfulness attestation (settlement claims). */
+  attestedAt?: string;
   /** Local file URI once a PDF was produced. */
   fileUri?: string;
 }
@@ -179,14 +216,27 @@ export interface EligibilityResult {
 }
 
 export interface OwedEstimate {
-  /** Headline number: midpoint of every likely + possible item. */
+  /**
+   * Headline number: sum of estimatedPayoutMax over SUMMABLE matches only
+   * (verified_current, open, cash or credit, likely or possible). "Paying up to $X right now."
+   */
   total: number;
-  /** Conservative: sum of minimums for likely items only. */
+  /** Conservative: sum of minimums for likely summable items. */
   low: number;
-  /** Optimistic: sum of maximums for likely + possible items. */
+  /** Same as total (kept for callers that want an explicit ceiling). */
   high: number;
   likelyCount: number;
   possibleCount: number;
+  /** likely + possible across the whole catalog (including watch / refund / closed-excluded items). */
+  matchCount: number;
+  /** Matches that contributed to `total`. */
+  sumCount: number;
+  /** Matches that are "what you paid" refunds or statutory caps (shown, never summed). */
+  equalsPaidCount: number;
+  /** Matches on the Watchlist (no claims process yet). */
+  watchCount: number;
+  /** Matches whose claim window already closed ("you missed this"). */
+  closedMatchCount: number;
   byCategory: Record<OpportunityCategory, number>;
 }
 
@@ -208,6 +258,8 @@ export interface OnboardingOption {
   label: string;
   value: string;
   emoji?: string;
+  /** Source link for stat / chart options (shown as an (i) affordance). */
+  sourceUrl?: string;
 }
 
 export interface OnboardingScreen {
@@ -220,6 +272,8 @@ export interface OnboardingScreen {
   options?: OnboardingOption[];
   /** Primary button label. */
   cta?: string;
+  /** Show this screen only when the rule passes against the profile so far. */
+  showIf?: EligibilityRule;
   /** Free-form guidance for the renderer (e.g. which chart). */
   notes?: string;
 }

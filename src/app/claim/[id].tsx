@@ -5,14 +5,28 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Button, Card, ProgressBar, Screen } from '@/components/ui';
 import { Radius, Spacing } from '@/constants/theme';
-import { fieldsForOpportunity, missingRequiredFields, prefillFromProfile } from '@/domain/documents';
+import {
+  fieldsForOpportunity,
+  missingRequiredFields,
+  prefillFromProfile,
+} from '@/domain/documents';
 import type { FormFieldSpec } from '@/domain/types';
 import { useTheme } from '@/hooks/use-theme';
 import { analytics, Events } from '@/services/analytics';
 import { scheduleDeadlineReminder } from '@/services/notifications';
 import { useAppStore } from '@/store/use-app-store';
 
-function Field({ spec, value, onChange, error }: { spec: FormFieldSpec; value: string; onChange: (v: string) => void; error?: boolean }) {
+function Field({
+  spec,
+  value,
+  onChange,
+  error,
+}: {
+  spec: FormFieldSpec;
+  value: string;
+  onChange: (v: string) => void;
+  error?: boolean;
+}) {
   const theme = useTheme();
   if (spec.type === 'select' && spec.options) {
     return (
@@ -30,8 +44,16 @@ function Field({ spec, value, onChange, error }: { spec: FormFieldSpec; value: s
                 accessibilityRole="radio"
                 accessibilityState={{ selected }}
                 onPress={() => onChange(opt)}
-                style={[styles.chip, { backgroundColor: selected ? theme.primary : theme.backgroundElement, borderColor: selected ? theme.primary : theme.border }]}>
-                <ThemedText type="smallBold" style={{ color: selected ? theme.textInverse : theme.text }}>
+                style={[
+                  styles.chip,
+                  {
+                    backgroundColor: selected ? theme.primary : theme.backgroundElement,
+                    borderColor: selected ? theme.primary : theme.border,
+                  },
+                ]}>
+                <ThemedText
+                  type="smallBold"
+                  style={{ color: selected ? theme.textInverse : theme.text }}>
                   {opt}
                 </ThemedText>
               </Pressable>
@@ -53,12 +75,22 @@ function Field({ spec, value, onChange, error }: { spec: FormFieldSpec; value: s
         placeholder={spec.placeholder ?? (spec.type === 'date' ? 'YYYY-MM-DD' : undefined)}
         placeholderTextColor={theme.textSecondary}
         multiline={spec.type === 'multiline'}
-        keyboardType={spec.type === 'email' ? 'email-address' : spec.type === 'number' ? 'decimal-pad' : 'default'}
+        keyboardType={
+          spec.type === 'email'
+            ? 'email-address'
+            : spec.type === 'number'
+              ? 'decimal-pad'
+              : 'default'
+        }
         autoCapitalize={spec.type === 'email' ? 'none' : 'sentences'}
         style={[
           styles.input,
           spec.type === 'multiline' && styles.multiline,
-          { color: theme.text, borderColor: error ? theme.danger : theme.border, backgroundColor: theme.background },
+          {
+            color: theme.text,
+            borderColor: error ? theme.danger : theme.border,
+            backgroundColor: theme.background,
+          },
         ]}
       />
       {spec.helpText ? (
@@ -73,6 +105,7 @@ function Field({ spec, value, onChange, error }: { spec: FormFieldSpec; value: s
 export default function ClaimScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const theme = useTheme();
   const isPro = useAppStore((s) => s.isPro);
   const opportunity = useAppStore((s) => s.catalog.find((o) => o.id === id));
   const profile = useAppStore((s) => s.profile);
@@ -81,12 +114,19 @@ export default function ClaimScreen() {
   const setClaimReminder = useAppStore((s) => s.setClaimReminder);
   const notificationsGranted = useAppStore((s) => s.notificationsGranted);
 
-  const fields = useMemo(() => (opportunity ? fieldsForOpportunity(opportunity) : []), [opportunity]);
+  const fields = useMemo(
+    () => (opportunity ? fieldsForOpportunity(opportunity) : []),
+    [opportunity]
+  );
   const [values, setValues] = useState<Record<string, string>>(() => ({
     ...prefillFromProfile(fields, profile),
     ...(existingForm?.fields ?? {}),
   }));
   const [showErrors, setShowErrors] = useState(false);
+  const [attested, setAttested] = useState(false);
+  const needsAttestation = opportunity?.formTemplateId === 'settlement_claim';
+  const [adult, setAdult] = useState(Boolean(profile.ageConfirmedAt));
+  const setProfile = useAppStore((s) => s.setProfile);
 
   if (!opportunity) {
     return (
@@ -102,12 +142,21 @@ export default function ClaimScreen() {
   const filled = fields.filter((f) => (values[f.key] ?? '').trim()).length;
 
   const submit = async () => {
-    if (missing.length) {
+    if (missing.length || (needsAttestation && !attested) || !adult) {
       setShowErrors(true);
       return;
     }
-    const form = generateForm(opportunity, values);
-    analytics.track(Events.formGenerated, { opportunityId: opportunity.id, templateId: opportunity.formTemplateId });
+    if (!profile.ageConfirmedAt) setProfile({ ageConfirmedAt: new Date().toISOString() });
+    const form = generateForm(
+      opportunity,
+      values,
+      new Date(),
+      needsAttestation ? new Date().toISOString() : undefined
+    );
+    analytics.track(Events.formGenerated, {
+      opportunityId: opportunity.id,
+      templateId: opportunity.formTemplateId,
+    });
     if (notificationsGranted) {
       const claim = useAppStore.getState().claims.find((c) => c.id === form.claimId);
       if (claim && !claim.reminderId) {
@@ -129,15 +178,31 @@ export default function ClaimScreen() {
           <>
             {showErrors && missing.length ? (
               <ThemedText type="caption" themeColor="danger">
-                {missing.length} required field{missing.length === 1 ? '' : 's'} left: {missing.map((f) => f.label).join(', ')}
+                {missing.length} required field{missing.length === 1 ? '' : 's'} left:{' '}
+                {missing.map((f) => f.label).join(', ')}
               </ThemedText>
             ) : null}
-            <Button title={existingForm ? 'Regenerate my form' : 'Generate my form'} onPress={submit} />
+            {showErrors && needsAttestation && !attested ? (
+              <ThemedText type="caption" themeColor="danger">
+                Please confirm the attestation above.
+              </ThemedText>
+            ) : null}
+            {showErrors && !adult ? (
+              <ThemedText type="caption" themeColor="danger">
+                You must be 18 or older to generate a claim.
+              </ThemedText>
+            ) : null}
+            <Button
+              title={existingForm ? 'Regenerate my form' : 'Generate my form'}
+              onPress={submit}
+            />
           </>
         }>
         <ThemedText type="subtitle">{opportunity.title}</ThemedText>
         <ThemedText type="small" themeColor="textSecondary">
-          Fill this once. Fritter writes the {opportunity.claimMethod === 'mail_form' ? 'mail-in form' : 'letter'} and remembers your details for next time.
+          Fill this once. Fritter writes the{' '}
+          {opportunity.claimMethod === 'mail_form' ? 'mail-in form' : 'letter'} and remembers your
+          details for next time.
         </ThemedText>
         <ProgressBar value={fields.length ? filled / fields.length : 0} />
         <ThemedText type="caption" themeColor="textSecondary">
@@ -153,9 +218,80 @@ export default function ClaimScreen() {
 
         <Card>
           {fields.map((f) => (
-            <Field key={f.key} spec={f} value={values[f.key] ?? ''} onChange={(v) => setValues((s) => ({ ...s, [f.key]: v }))} error={showErrors && missingKeys.has(f.key)} />
+            <Field
+              key={f.key}
+              spec={f}
+              value={values[f.key] ?? ''}
+              onChange={(v) => setValues((s) => ({ ...s, [f.key]: v }))}
+              error={showErrors && missingKeys.has(f.key)}
+            />
           ))}
         </Card>
+
+        {!profile.ageConfirmedAt ? (
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: adult }}
+            onPress={() => setAdult((v) => !v)}
+            style={[
+              styles.attest,
+              {
+                borderColor: showErrors && !adult ? theme.danger : theme.border,
+                backgroundColor: theme.backgroundElement,
+              },
+            ]}>
+            <View
+              style={[
+                styles.checkbox,
+                {
+                  borderColor: adult ? theme.primary : theme.border,
+                  backgroundColor: adult ? theme.primary : 'transparent',
+                },
+              ]}>
+              {adult ? (
+                <ThemedText type="caption" style={{ color: theme.textInverse }}>
+                  ✓
+                </ThemedText>
+              ) : null}
+            </View>
+            <ThemedText type="small" style={styles.attestText}>
+              I’m 18 or older.
+            </ThemedText>
+          </Pressable>
+        ) : null}
+        {needsAttestation ? (
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: attested }}
+            onPress={() => setAttested((v) => !v)}
+            style={[
+              styles.attest,
+              {
+                borderColor: showErrors && !attested ? theme.danger : theme.border,
+                backgroundColor: theme.backgroundElement,
+              },
+            ]}>
+            <View
+              style={[
+                styles.checkbox,
+                {
+                  borderColor: attested ? theme.primary : theme.border,
+                  backgroundColor: attested ? theme.primary : 'transparent',
+                },
+              ]}>
+              {attested ? (
+                <ThemedText type="caption" style={{ color: theme.textInverse }}>
+                  ✓
+                </ThemedText>
+              ) : null}
+            </View>
+            <ThemedText type="small" style={styles.attestText}>
+              I confirm the information above is true and that I meet the eligibility requirements
+              described by the settlement administrator. I understand Fritter is not a law firm and
+              does not decide eligibility.
+            </ThemedText>
+          </Pressable>
+        ) : null}
       </Screen>
     </>
   );
@@ -163,8 +299,37 @@ export default function ClaimScreen() {
 
 const styles = StyleSheet.create({
   field: { gap: Spacing.one, marginBottom: Spacing.two },
-  input: { borderWidth: 1, borderRadius: Radius.sm, paddingHorizontal: Spacing.three, paddingVertical: Spacing.two + 2, fontSize: 16 },
+  input: {
+    borderWidth: 1,
+    borderRadius: Radius.sm,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two + 2,
+    fontSize: 16,
+  },
   multiline: { minHeight: 96, textAlignVertical: 'top' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
-  chip: { paddingHorizontal: Spacing.three, paddingVertical: Spacing.two, borderRadius: Radius.pill, borderWidth: 1 },
+  chip: {
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
+    borderRadius: Radius.pill,
+    borderWidth: 1,
+  },
+  attest: {
+    flexDirection: 'row',
+    gap: Spacing.two,
+    alignItems: 'flex-start',
+    padding: Spacing.three,
+    borderRadius: Radius.md,
+    borderWidth: 1.5,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  attestText: { flex: 1 },
 });

@@ -30,12 +30,19 @@ class ConsoleAnalytics implements Analytics {
 }
 
 class MixpanelAnalytics implements Analytics {
-  private mp: { track: (e: string, p?: AnalyticsProps) => void; identify: (id: string) => void; getPeople: () => { set: (p: AnalyticsProps) => void }; init: () => Promise<void> } | null = null;
+  private mp: {
+    track: (e: string, p?: AnalyticsProps) => void;
+    identify: (id: string) => void;
+    getPeople: () => { set: (p: AnalyticsProps) => void };
+    init: () => Promise<void>;
+  } | null = null;
 
   async init() {
     try {
       // Loaded lazily so the app runs without the native module (Expo Go, web, tests).
-      const mod = require('mixpanel-react-native') as { Mixpanel: new (token: string, trackAutomaticEvents: boolean) => any };
+      const mod = require('mixpanel-react-native') as {
+        Mixpanel: new (token: string, trackAutomaticEvents: boolean) => any;
+      };
       const instance = new mod.Mixpanel(TOKEN as string, false);
       await instance.init();
       this.mp = instance;

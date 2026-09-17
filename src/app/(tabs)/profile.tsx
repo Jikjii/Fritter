@@ -40,7 +40,12 @@ export default function ProfileScreen() {
   const [restoring, setRestoring] = useState(false);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<Record<string, string>>(() =>
-    Object.fromEntries(BASE_FORM_FIELDS.map((f) => [f.key, typeof profile[f.key] === 'string' ? (profile[f.key] as string) : '']))
+    Object.fromEntries(
+      BASE_FORM_FIELDS.map((f) => [
+        f.key,
+        typeof profile[f.key] === 'string' ? (profile[f.key] as string) : '',
+      ])
+    )
   );
 
   const restore = async () => {
@@ -52,7 +57,10 @@ export default function ProfileScreen() {
       analytics.track(Events.purchaseRestored);
       Alert.alert('Restored', 'Your Pro access is back.');
     } else {
-      Alert.alert('Nothing to restore', res.error ?? 'No active subscription was found for this store account.');
+      Alert.alert(
+        'Nothing to restore',
+        res.error ?? 'No active subscription was found for this store account.'
+      );
     }
   };
 
@@ -75,8 +83,16 @@ export default function ProfileScreen() {
             ? 'Every payout, claim form and deadline reminder is unlocked.'
             : 'Unlock every payout in your feed, ready-to-send claim forms and deadline reminders.'}
         </ThemedText>
-        {!isPro ? <Button title="Unlock Pro" onPress={() => router.push('/paywall')} size="md" /> : null}
-        <Button title={restoring ? 'Restoring…' : 'Restore purchases'} variant="ghost" size="md" loading={restoring} onPress={restore} />
+        {!isPro ? (
+          <Button title="Unlock Pro" onPress={() => router.push('/paywall')} size="md" />
+        ) : null}
+        <Button
+          title={restoring ? 'Restoring…' : 'Restore purchases'}
+          variant="ghost"
+          size="md"
+          loading={restoring}
+          onPress={restore}
+        />
         {isMockPurchases ? (
           <ThemedText type="caption" themeColor="textSecondary">
             Mock store active (no RevenueCat keys). Purchases succeed instantly in this build.
@@ -87,7 +103,13 @@ export default function ProfileScreen() {
       <Card>
         <View style={styles.rowBetween}>
           <ThemedText type="heading">Claim identity</ThemedText>
-          <Button title={editing ? 'Cancel' : 'Edit'} variant="secondary" size="md" style={styles.smallBtn} onPress={() => setEditing((v) => !v)} />
+          <Button
+            title={editing ? 'Cancel' : 'Edit'}
+            variant="secondary"
+            size="md"
+            style={styles.smallBtn}
+            onPress={() => setEditing((v) => !v)}
+          />
         </View>
         <ThemedText type="small" themeColor="textSecondary">
           Pre-fills every form you generate. Stored only on this device.
@@ -107,7 +129,14 @@ export default function ProfileScreen() {
                   placeholderTextColor={theme.textSecondary}
                   keyboardType={f.type === 'email' ? 'email-address' : 'default'}
                   autoCapitalize={f.type === 'email' ? 'none' : 'words'}
-                  style={[styles.input, { color: theme.text, borderColor: theme.border, backgroundColor: theme.background }]}
+                  style={[
+                    styles.input,
+                    {
+                      color: theme.text,
+                      borderColor: theme.border,
+                      backgroundColor: theme.background,
+                    },
+                  ]}
                 />
               </View>
             ))}
@@ -141,20 +170,31 @@ export default function ProfileScreen() {
       <Card>
         <ThemedText type="heading">Catalog</ThemedText>
         <ThemedText type="small" themeColor="textSecondary">
-          {catalog.length} opportunities · {catalogUpdatedAt ? `refreshed ${catalogUpdatedAt.slice(0, 10)}` : 'bundled edition'}
+          {catalog.length} opportunities ·{' '}
+          {catalogUpdatedAt ? `refreshed ${catalogUpdatedAt.slice(0, 10)}` : 'bundled edition'}
         </ThemedText>
       </Card>
 
       <Card>
         <ThemedText type="heading">Legal</ThemedText>
         <ThemedText type="small" themeColor="textSecondary">
-          Fritter is not a law firm and does not give legal advice. Payout estimates are ranges published by
-          settlement administrators or companies and are not guarantees. Always confirm requirements with
-          the official source before you file.
+          Fritter is not a law firm and does not give legal advice. Payout estimates are ranges
+          published by settlement administrators or companies and are not guarantees. Always confirm
+          requirements with the official source before you file.
         </ThemedText>
         <View style={styles.links}>
-          <Button title="Terms" variant="ghost" size="md" onPress={() => WebBrowser.openBrowserAsync(TERMS_URL)} />
-          <Button title="Privacy" variant="ghost" size="md" onPress={() => WebBrowser.openBrowserAsync(PRIVACY_URL)} />
+          <Button
+            title="Terms"
+            variant="ghost"
+            size="md"
+            onPress={() => WebBrowser.openBrowserAsync(TERMS_URL)}
+          />
+          <Button
+            title="Privacy"
+            variant="ghost"
+            size="md"
+            onPress={() => WebBrowser.openBrowserAsync(PRIVACY_URL)}
+          />
         </View>
       </Card>
 
@@ -163,10 +203,14 @@ export default function ProfileScreen() {
         variant="danger"
         size="md"
         onPress={() =>
-          confirm('Delete everything?', 'Answers, claims and generated forms on this device will be erased.', () => {
-            resetAll();
-            router.replace('/onboarding');
-          })
+          confirm(
+            'Delete everything?',
+            'Answers, claims and generated forms on this device will be erased.',
+            () => {
+              resetAll();
+              router.replace('/onboarding');
+            }
+          )
         }
       />
     </Screen>
@@ -174,10 +218,21 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.two },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: Spacing.two,
+  },
   smallBtn: { alignSelf: 'auto', minWidth: 80 },
   form: { gap: Spacing.two },
   field: { gap: Spacing.one },
-  input: { borderWidth: 1, borderRadius: Radius.sm, paddingHorizontal: Spacing.three, paddingVertical: Spacing.two + 2, fontSize: 16 },
+  input: {
+    borderWidth: 1,
+    borderRadius: Radius.sm,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two + 2,
+    fontSize: 16,
+  },
   links: { flexDirection: 'row', gap: Spacing.two },
 });

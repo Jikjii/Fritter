@@ -8,7 +8,14 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { canTransition, makeId, newClaim } from '@/domain/claims';
 import { fieldsForOpportunity, formTitle, renderFormHtml } from '@/domain/documents';
-import type { Claim, ClaimStatus, GeneratedForm, Opportunity, ProfileValue, UserProfile } from '@/domain/types';
+import type {
+  Claim,
+  ClaimStatus,
+  GeneratedForm,
+  Opportunity,
+  ProfileValue,
+  UserProfile,
+} from '@/domain/types';
 import { getBundledCatalog, mergeCatalog } from '@/services/catalog';
 
 export interface AppState {
@@ -35,10 +42,20 @@ export interface AppState {
   setCatalog: (remote: Opportunity[] | null, now: Date) => void;
 
   saveClaim: (opportunity: Opportunity, now?: Date) => Claim;
-  updateClaimStatus: (claimId: string, status: ClaimStatus, now?: Date, paidAmount?: number) => boolean;
+  updateClaimStatus: (
+    claimId: string,
+    status: ClaimStatus,
+    now?: Date,
+    paidAmount?: number
+  ) => boolean;
   setClaimReminder: (claimId: string, reminderId: string | undefined) => void;
   removeClaim: (claimId: string) => void;
-  generateForm: (opportunity: Opportunity, values: Record<string, string>, now?: Date) => GeneratedForm;
+  generateForm: (
+    opportunity: Opportunity,
+    values: Record<string, string>,
+    now?: Date,
+    attestedAt?: string
+  ) => GeneratedForm;
   setFormFileUri: (formId: string, uri: string) => void;
   deleteForm: (formId: string) => void;
   resetAll: () => void;
@@ -78,7 +95,10 @@ export const useAppStore = create<AppState>()(
         }),
       setProfile: (patch) => set((s) => ({ profile: { ...s.profile, ...patch } })),
       setCatalog: (remote, now) =>
-        set({ catalog: mergeCatalog(getBundledCatalog(), remote), catalogUpdatedAt: now.toISOString() }),
+        set({
+          catalog: mergeCatalog(getBundledCatalog(), remote),
+          catalogUpdatedAt: now.toISOString(),
+        }),
 
       saveClaim: (opportunity, now = new Date()) => {
         const existing = get().claims.find((c) => c.opportunityId === opportunity.id);
@@ -107,14 +127,16 @@ export const useAppStore = create<AppState>()(
         return true;
       },
       setClaimReminder: (claimId, reminderId) =>
-        set((s) => ({ claims: s.claims.map((c) => (c.id === claimId ? { ...c, reminderId } : c)) })),
+        set((s) => ({
+          claims: s.claims.map((c) => (c.id === claimId ? { ...c, reminderId } : c)),
+        })),
       removeClaim: (claimId) =>
         set((s) => ({
           claims: s.claims.filter((c) => c.id !== claimId),
           forms: s.forms.filter((f) => f.claimId !== claimId),
         })),
 
-      generateForm: (opportunity, values, now = new Date()) => {
+      generateForm: (opportunity, values, now = new Date(), attestedAt) => {
         const claim = get().saveClaim(opportunity, now);
         const seed = get().idSeed;
         const fields = fieldsForOpportunity(opportunity);
@@ -130,20 +152,37 @@ export const useAppStore = create<AppState>()(
           fields: cleaned,
           html: renderFormHtml(opportunity, cleaned, createdAt),
           createdAt,
+          attestedAt,
         };
         set((s) => ({
           forms: [form, ...s.forms],
           idSeed: seed + 1,
           claims: s.claims.map((c) =>
             c.id === claim.id
-              ? { ...c, formId: form.id, status: c.status === 'saved' ? 'in_progress' : c.status, updatedAt: createdAt }
+              ? {
+                  ...c,
+                  formId: form.id,
+                  status: c.status === 'saved' ? 'in_progress' : c.status,
+                  updatedAt: createdAt,
+                }
               : c
           ),
           // Remember identity fields for next time.
           profile: {
             ...s.profile,
             ...Object.fromEntries(
-              ['firstName', 'lastName', 'email', 'phone', 'addressLine1', 'addressLine2', 'city', 'state', 'postalCode', 'country']
+              [
+                'firstName',
+                'lastName',
+                'email',
+                'phone',
+                'addressLine1',
+                'addressLine2',
+                'city',
+                'state',
+                'postalCode',
+                'country',
+              ]
                 .filter((k) => cleaned[k])
                 .map((k) => [k, cleaned[k]])
             ),
@@ -179,5 +218,7 @@ export const useAppStore = create<AppState>()(
 );
 
 /** Selectors */
-export const selectOpportunity = (id: string) => (s: AppState) => s.catalog.find((o) => o.id === id);
-export const selectClaimForOpportunity = (id: string) => (s: AppState) => s.claims.find((c) => c.opportunityId === id);
+export const selectOpportunity = (id: string) => (s: AppState) =>
+  s.catalog.find((o) => o.id === id);
+export const selectClaimForOpportunity = (id: string) => (s: AppState) =>
+  s.claims.find((c) => c.opportunityId === id);

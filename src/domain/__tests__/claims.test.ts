@@ -10,7 +10,12 @@ const o = {
 describe('claims', () => {
   it('newClaim starts saved with the midpoint estimate', () => {
     const c = newClaim(o, new Date('2026-09-17T00:00:00Z'), 'clm_1');
-    expect(c).toMatchObject({ id: 'clm_1', opportunityId: 'opp', status: 'saved', estimatedPayout: 150 });
+    expect(c).toMatchObject({
+      id: 'clm_1',
+      opportunityId: 'opp',
+      status: 'saved',
+      estimatedPayout: 150,
+    });
     expect(c.createdAt).toBe('2026-09-17T00:00:00.000Z');
   });
 
@@ -44,7 +49,14 @@ describe('claims', () => {
     expect(s.potential).toBe(175);
     expect(s.pending).toBe(25);
     expect(s.paid).toBe(22);
-    expect(s.counts).toEqual({ saved: 1, in_progress: 1, submitted: 1, paid: 2, rejected: 1, expired: 1 });
+    expect(s.counts).toEqual({
+      saved: 1,
+      in_progress: 1,
+      submitted: 1,
+      paid: 2,
+      rejected: 1,
+      expired: 1,
+    });
   });
 
   it('makeId is deterministic', () => {
