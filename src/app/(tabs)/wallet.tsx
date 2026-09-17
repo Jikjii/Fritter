@@ -8,7 +8,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Badge, Button, Card, Screen, Stat } from '@/components/ui';
 import { CategoryStyle, Spacing } from '@/constants/theme';
 import { CLAIM_STATUS_LABEL, CLAIM_TRANSITIONS, summarizeWallet } from '@/domain/claims';
-import { formatMoney, isPastDeadline } from '@/domain/estimate';
+import { formatMoney, isClosed, isWatching, payoutLabel } from '@/domain/estimate';
 import type { Claim, ClaimStatus } from '@/domain/types';
 import { useCatalog } from '@/hooks/use-catalog';
 import { analytics, Events } from '@/services/analytics';
@@ -28,8 +28,8 @@ const ACTION_LABEL: Partial<Record<ClaimStatus, string>> = {
   in_progress: 'Start',
   submitted: 'Mark submitted',
   paid: 'Mark paid',
-  rejected: 'Rejected',
-  expired: 'Expired',
+  rejected: 'Mark rejected',
+  expired: 'Mark expired',
   saved: 'Back to saved',
 };
 
@@ -40,8 +40,20 @@ function ClaimRow({ claim }: { claim: Claim }) {
   const router = useRouter();
   if (!opportunity) return null;
   const cat = CategoryStyle[opportunity.category];
-  const closed = isPastDeadline(opportunity.deadline);
-  const next = CLAIM_TRANSITIONS[claim.status].filter((s) => s !== 'expired' || closed);
+  const closed = isClosed(opportunity);
+  const automatic = opportunity.claimMethod === 'automatic';
+  const watching = isWatching(opportunity);
+  const next = watching
+    ? []
+    : CLAIM_TRANSITIONS[claim.status].filter(
+        (s) => (s !== 'expired' || closed) && !(automatic && (s === 'in_progress' || s === 'saved'))
+      );
+  const money =
+    claim.status === 'paid'
+      ? formatMoney(claim.paidAmount ?? claim.estimatedPayout)
+      : claim.estimatedPayout > 0
+        ? `up to ${formatMoney(claim.estimatedPayout)}`
+        : payoutLabel(opportunity);
 
   const move = (to: ClaimStatus) => {
     if (updateClaimStatus(claim.id, to)) {
@@ -81,18 +93,28 @@ function ClaimRow({ claim }: { claim: Claim }) {
           {opportunity.title}
         </ThemedText>
         <View style={styles.rowBetween}>
-          <ThemedText type="subtitle" themeColor="money">
-            {claim.status === 'paid'
-              ? formatMoney(claim.paidAmount ?? claim.estimatedPayout)
-              : `~${formatMoney(claim.estimatedPayout)}`}
+          <ThemedText
+            type={claim.estimatedPayout > 0 || claim.status === 'paid' ? 'subtitle' : 'heading'}
+            themeColor={watching ? 'textSecondary' : 'money'}>
+            {money}
           </ThemedText>
           <ThemedText type="caption" themeColor={closed ? 'danger' : 'textSecondary'}>
-            {deadlineLabel(opportunity.deadline, closed)}
+            {deadlineLabel(opportunity, closed)}
           </ThemedText>
         </View>
       </Pressable>
+      {watching ? (
+        <ThemedText type="caption" themeColor="textSecondary">
+          On your Watchlist. No claims process exists yet; you will be alerted the day one opens.
+        </ThemedText>
+      ) : null}
+      {automatic && claim.status === 'submitted' ? (
+        <ThemedText type="caption" themeColor="textSecondary">
+          Automatic: nothing to file. Mark it paid when the credit or payment shows up.
+        </ThemedText>
+      ) : null}
       <View style={styles.actions}>
-        {claim.status === 'saved' || claim.status === 'in_progress' ? (
+        {!automatic && !watching && (claim.status === 'saved' || claim.status === 'in_progress') ? (
           <Button
             title={claim.formId ? 'Open form' : 'Prepare form'}
             size="md"
@@ -107,7 +129,13 @@ function ClaimRow({ claim }: { claim: Claim }) {
         {next.map((to) => (
           <Button
             key={to}
-            title={ACTION_LABEL[to] ?? CLAIM_STATUS_LABEL[to]}
+            title={
+              automatic && to === 'paid'
+                ? 'Credit arrived'
+                : to === 'in_progress' && claim.status !== 'saved'
+                  ? 'Reopen'
+                  : (ACTION_LABEL[to] ?? CLAIM_STATUS_LABEL[to])
+            }
             variant="secondary"
             size="md"
             style={styles.actionBtn}

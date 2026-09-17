@@ -63,7 +63,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "catalog:validate": "node scripts/validate-catalog.js",
-    "export:web": "expo export --platform web"
+    "export:web": "expo export --platform web",
+    "smoke:web": "node scripts/smoke-web.js"
   },
   "private": true,
   "description": "Fritter — find the money you may be owed as an anime, gaming and cosplay fan. Expo + TypeScript.",

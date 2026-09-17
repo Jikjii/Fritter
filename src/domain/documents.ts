@@ -54,6 +54,14 @@ export const TEMPLATE_FIELDS: Record<FormTemplateId, FormFieldSpec[]> = {
       required: true,
     },
     {
+      key: 'amountClaimed',
+      label: 'Total value claimed (USD)',
+      type: 'number',
+      required: true,
+      helpText:
+        'Add up receipts or build costs. Airlines pay provable loss up to the legal cap, never more than you can document.',
+    },
+    {
       key: 'details',
       label: 'Details (props, wigs, costume pieces affected, etc.)',
       type: 'multiline',
@@ -141,6 +149,7 @@ ${v.reason ? `<p>Reason: ${esc(v.reason)}</p>` : ''}
       return `<p>To ${esc(v.carrier ?? o.company)} Customer Relations,</p>
 <p>Booking reference <strong>${esc(v.bookingReference ?? '')}</strong>, travel date ${esc(v.travelDate ?? '')}. Issue: <strong>${esc(v.issue ?? '')}</strong>.</p>
 ${v.details ? `<p>${esc(v.details)}</p>` : ''}
+${v.amountClaimed ? `<p>Total documented loss claimed: <strong>$${esc(v.amountClaimed)}</strong> (itemized documentation attached).</p>` : ''}
 <p>I am requesting the refund and/or compensation I am entitled to under applicable passenger-rights rules and your contract of carriage. Please respond in writing to ${esc(v.email ?? '')}.</p>`;
     case 'commission_dispute':
       return `<p>To ${esc(v.sellerName ?? '')} (via ${esc(v.platform ?? '')}),</p>
@@ -175,7 +184,7 @@ export function renderFormHtml(
   const date = createdAt.slice(0, 10);
   const recipientAddress = o.mailingAddress || v.recipientAddress || '';
   const recipientEmail = o.claimEmail || v.recipientEmail || '';
-  const recipientName = v.recipientName || '';
+  const recipientName = v.recipientName || v.carrier || v.sellerName || v.eventName || '';
   const recipient = recipientAddress
     ? `<p><strong>To:</strong><br/>${recipientName ? `${esc(recipientName)}<br/>` : ''}${esc(recipientAddress).replace(/\n/g, '<br/>')}</p>`
     : recipientEmail

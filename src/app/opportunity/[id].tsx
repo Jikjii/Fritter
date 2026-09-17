@@ -161,7 +161,7 @@ export default function OpportunityScreen() {
             {isPro || watching || closed ? payoutLabel(o) : '$•••'}
           </ThemedText>
           <ThemedText type="caption" themeColor={closed ? 'danger' : 'textSecondary'}>
-            {deadlineLabel(o.deadline, closed)}
+            {deadlineLabel(o, closed)}
           </ThemedText>
         </View>
         {!isPro ? (

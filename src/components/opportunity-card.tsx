@@ -35,9 +35,14 @@ export const STATUS_BADGE: Record<
   closed: { label: 'CLOSED', color: 'danger' },
 };
 
-export function deadlineLabel(deadline: string, closed: boolean): string {
+export function deadlineLabel(
+  o: Pick<Opportunity, 'deadline' | 'deadlineKind'>,
+  closed: boolean
+): string {
+  const { deadline } = o;
   if (closed) return 'Closed';
-  if (deadline === 'rolling') return 'No deadline';
+  if (o.deadlineKind === 'hearing') return `Hearing ${deadline}`;
+  if (o.deadlineKind === 'none' || deadline === 'rolling') return 'No deadline';
   if (deadline === 'unknown') return 'Deadline TBD';
   const d = daysUntil(deadline);
   if (d === null) return 'Deadline TBD';
@@ -105,7 +110,7 @@ export function OpportunityCard({
                 {o.company}
               </ThemedText>
               <ThemedText type="caption" themeColor={closed ? 'danger' : 'textSecondary'}>
-                {deadlineLabel(o.deadline, closed)}
+                {deadlineLabel(o, closed)}
               </ThemedText>
             </View>
           </View>

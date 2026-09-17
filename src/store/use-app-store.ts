@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { canTransition, makeId, newClaim } from '@/domain/claims';
+import { amountAtStake, canTransition, makeId, newClaim } from '@/domain/claims';
 import { fieldsForOpportunity, formTitle, renderFormHtml } from '@/domain/documents';
 import type {
   Claim,
@@ -143,6 +143,7 @@ export const useAppStore = create<AppState>()(
         const cleaned: Record<string, string> = {};
         for (const f of fields) cleaned[f.key] = (values[f.key] ?? '').trim();
         const createdAt = now.toISOString();
+        const stake = amountAtStake(opportunity, cleaned);
         const form: GeneratedForm = {
           id: makeId('frm', seed),
           claimId: claim.id,
@@ -163,6 +164,7 @@ export const useAppStore = create<AppState>()(
                   ...c,
                   formId: form.id,
                   status: c.status === 'saved' ? 'in_progress' : c.status,
+                  estimatedPayout: stake ?? c.estimatedPayout,
                   updatedAt: createdAt,
                 }
               : c

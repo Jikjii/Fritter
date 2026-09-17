@@ -1,4 +1,3 @@
-import { midpoint } from './estimate';
 import type { Claim, ClaimStatus, Opportunity } from './types';
 
 export const CLAIM_STATUS_LABEL: Record<ClaimStatus, string> = {
@@ -24,15 +23,40 @@ export function canTransition(from: ClaimStatus, to: ClaimStatus): boolean {
   return CLAIM_TRANSITIONS[from].includes(to);
 }
 
+/**
+ * Money a claim represents in the Wallet. Only cash/credit programs carry a number from the
+ * catalog ("up to $X"). Refunds of what you paid, statutory caps and repairs start at 0 until
+ * the user enters the amount at stake on the form (see amountAtStake). Watchlist items are $0.
+ */
+export function claimEstimate(o: Opportunity): number {
+  if (o.status === 'watching') return 0;
+  if (o.payoutKind === 'cash' || o.payoutKind === 'credit') return o.estimatedPayoutMax;
+  return 0;
+}
+
+/** Amount the user typed on the claim form (amountPaid / amountClaimed), capped by a legal cap. */
+export function amountAtStake(o: Opportunity, values: Record<string, string>): number | null {
+  const raw = values.amountPaid ?? values.amountClaimed ?? '';
+  if (!raw) return null;
+  const n = Number(String(raw).replace(/[^0-9.]/g, ''));
+  if (Number.isNaN(n) || n <= 0) return null;
+  const cap =
+    o.payoutKind === 'statutory_cap' && o.estimatedPayoutMax > 0 ? o.estimatedPayoutMax : Infinity;
+  return Math.round(Math.min(n, cap) * 100) / 100;
+}
+
 export function newClaim(opportunity: Opportunity, now: Date, id: string): Claim {
   const ts = now.toISOString();
+  // Automatic settlements are effectively already filed: track them as submitted.
+  const automatic = opportunity.claimMethod === 'automatic';
   return {
     id,
     opportunityId: opportunity.id,
-    status: 'saved',
-    estimatedPayout: midpoint(opportunity),
+    status: automatic ? 'submitted' : 'saved',
+    estimatedPayout: claimEstimate(opportunity),
     createdAt: ts,
     updatedAt: ts,
+    submittedAt: automatic ? ts : undefined,
   };
 }
 

@@ -826,12 +826,6 @@
     "claimMethod": "email",
     "extraFields": [
       {
-        "key": "recipientName",
-        "label": "Convention / organizer name",
-        "type": "text",
-        "required": true
-      },
-      {
         "key": "recipientEmail",
         "label": "Organizer email",
         "type": "email",
@@ -883,12 +877,6 @@
     "proofRequired": "Property Irregularity Report number, baggage tag, itemized inventory with receipts or build-cost documentation, photos of the costume before travel and the damage after.",
     "claimMethod": "email",
     "extraFields": [
-      {
-        "key": "recipientName",
-        "label": "Airline",
-        "type": "text",
-        "required": true
-      },
       {
         "key": "recipientEmail",
         "label": "Airline baggage-claims email",
@@ -950,12 +938,6 @@
     "claimMethod": "email",
     "extraFields": [
       {
-        "key": "recipientName",
-        "label": "Airline",
-        "type": "text",
-        "required": true
-      },
-      {
         "key": "recipientEmail",
         "label": "Airline baggage-claims email",
         "type": "email",
@@ -1014,12 +996,6 @@
     "claimMethod": "email",
     "extraFields": [
       {
-        "key": "recipientName",
-        "label": "Airline",
-        "type": "text",
-        "required": true
-      },
-      {
         "key": "recipientEmail",
         "label": "Airline customer-relations email",
         "type": "email",
@@ -1072,12 +1048,6 @@
     "claimMethod": "email",
     "extraFields": [
       {
-        "key": "recipientName",
-        "label": "Airline",
-        "type": "text",
-        "required": true
-      },
-      {
         "key": "recipientEmail",
         "label": "Airline customer-relations email",
         "type": "email",
@@ -1121,14 +1091,6 @@
     "deadlineKind": "none",
     "proofRequired": "PayPal transaction ID or Etsy order number, the commission agreement or DM thread showing the promised delivery date, any tracking the seller provided.",
     "claimMethod": "in_app_request",
-    "extraFields": [
-      {
-        "key": "recipientName",
-        "label": "Commissioner / shop name",
-        "type": "text",
-        "required": true
-      }
-    ],
     "claimUrl": "https://www.paypal.com/disputes/",
     "sourceUrl": "https://www.paypal.com/us/legalhub/paypal/buyer-protection",
     "confidence": "verified_current",
