@@ -1,4 +1,4 @@
-import { fieldsForOpportunity, formTitle, missingRequiredFields, prefillFromProfile, renderFormHtml } from '../documents';
+import { fieldsForOpportunity, formTitle, htmlToPlainText, missingRequiredFields, prefillFromProfile, renderFormHtml } from '../documents';
 import type { Opportunity } from '../types';
 
 const o: Opportunity = {
@@ -58,5 +58,12 @@ describe('documents', () => {
 
   it('formTitle combines template and opportunity', () => {
     expect(formTitle(o)).toBe('Settlement Claim Form — Crunchyroll privacy settlement');
+  });
+});
+
+describe('htmlToPlainText', () => {
+  it('strips tags and decodes entities', () => {
+    const text = htmlToPlainText('<html><head><style>p{}</style></head><body><h1>Hi &amp; bye</h1><p>Line<br/>two</p></body></html>');
+    expect(text).toBe('Hi & bye\n\nLine\ntwo');
   });
 });

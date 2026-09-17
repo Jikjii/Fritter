@@ -177,3 +177,20 @@ ${body(o.formTemplateId, o, v)}
 <div class="footer">This document was prepared by the user with a template. Fritter is not a law firm and does not provide legal advice. Verify requirements with the official administrator before submitting.${o.sourceUrl ? ` Source: ${esc(o.sourceUrl)}` : ''}</div>
 </body></html>`;
 }
+
+/** Plain-text version of a generated form, for clipboard / email bodies. */
+export function htmlToPlainText(html: string): string {
+  return html
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<head[\s\S]*?<\/head>/gi, '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|h1|h2|h3|li)>/gi, '\n\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
